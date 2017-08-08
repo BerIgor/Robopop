@@ -3,6 +3,9 @@ package popcorp.robopop;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import static java.lang.Math.max;
+
+
 /*
 This class will check for an interval condition satisfaction.
 The List passed to conditionSatisfied should be as such:
@@ -42,7 +45,7 @@ public class IntervalCondition implements StopCondition {
                 return true;
             }
         }
-        previousPopCount += popList.size(); //Update previous pop count before returning
+        previousPopCount = max(popList.size()-1, 0); //Update previous pop count before returning
         return false;
     }
 }

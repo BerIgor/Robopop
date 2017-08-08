@@ -1,10 +1,13 @@
 package popcorp.robopop;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioRecord;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
     private AudioRecord audioRecorder = null;
 
+    private Intent startupIntent = null;
+
+    private MediaPlayer mediaPlayer = null;
+
     //====== Methods ======//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Recorder Setup
         bufferSize = AudioRecord.getMinBufferSize(sampleRate, CHANNEL_IN_MONO, ENCODING_PCM_16BIT);
+
+        // Media Player - for final notification
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer = MediaPlayer.create(this, R.raw.sound);
 
         Log.i("IGOR", "MAIN - buffer size " + (new Integer(bufferSize)).toString());
 
@@ -72,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         stopButton = (Button)findViewById(R.id.stopButton);
         // ====End of Layout Creation====
 
-        final Intent startupIntent = new Intent(this, StartupActivity.class);
+        startupIntent = new Intent(this, StartupActivity.class);
 
         // ====Stop Button====
         // Stop all tasks and return to the Startup Activity
@@ -80,13 +91,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("IGOR", "MAIN - on STOP");
-
-                audioRecorder.stop();
-                audioRecorder.release();
-
-                recorderTask.cancel(true);
-//                processorTask.cancel(true);
-
+                stopAll();
                 startActivity(startupIntent);
             }
         });
@@ -105,6 +110,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Start the Recorder Thread
         recorderTask.execute();
+    }
+
+    /*
+    Method for stopping recording and processing
+     */
+    private void stopAll() {
+        audioRecorder.stop();
+        audioRecorder.release();
+        recorderTask.cancel(true);
     }
 
 
@@ -277,6 +291,31 @@ public class MainActivity extends AppCompatActivity {
             // DEBUG
             // Print the list
             Log.i("IGOR", popIndexList.toString());
+
+            if (stopCondition.conditionSatisfied(popIndexList)) {
+                Log.i("IGOR", "PROCESSOR - I AM SATISFIED");
+                stopAll();
+                mediaPlayer.start(); // no need to call prepare(); create() does that for you
+                // Alert Dialog
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                String alertTitle = "Quick,";
+                String alertMessage = "your popcorn is ready";
+                String alertButtonText = "Okay";
+                alertDialogBuilder.setMessage(alertMessage).setTitle(alertTitle);
+                alertDialogBuilder.setCancelable(false);
+                alertDialogBuilder.setPositiveButton(alertButtonText, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int id){
+                        startActivity(startupIntent);
+                    }
+
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                //TODO: Do something fancy
+            }
+
         }
     }
 }
