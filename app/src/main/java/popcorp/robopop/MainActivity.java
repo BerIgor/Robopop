@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private RecorderTask recorderTask = null;
     private ProcessorTask processorTask = null;
 
-    public LinkedList<Integer> popIndexList = new LinkedList<Integer>(); // Data structure for peak indices
+    public LinkedList<Integer> popIndexList = new LinkedList<>(); // Data structure for peak indices
     private StopCondition stopCondition = null;
     private PeakFinder peakFinder = null;
 
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button stopButton = null;
 
-    private int windowSize = 2;
+    private int windowSize = 4;
 
     public static int sampleRate = 44100;
     public int bufferSize = -1; //TODO: Check premissions
@@ -70,16 +70,13 @@ public class MainActivity extends AppCompatActivity {
         bufferSize = windowSize * sampleRate;
         audioRecorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, CHANNEL_IN_MONO, ENCODING_PCM_16BIT, 2*bufferSize);
 
- //       int cunt = audioRecorder.getBufferSizeInFrames();
- //       Log.i("IGOR", "MAIN - buffer size in frames " + (new Integer(cunt)).toString());
-
         // Calculate pop width (to define window in which we ignore extra pops)
-        int popWidth = (int)(0.02*sampleRate);
+        int popWidth = (int)(0.03*sampleRate);
 
         Log.i("IGOR", "MAIN - pop width " + (new Integer(popWidth)).toString());
 
         // Processor Setup
-        peakFinder = new MovingAverage(10, popWidth);
+        peakFinder = new MovingAverage(8, popWidth);
 
         // Task Creation
         recorderTask = new RecorderTask();
@@ -99,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i("IGOR", "MAIN - on STOP");
                 stopAll();
-                startActivity(startupIntent);
+//                startActivity(startupIntent);
             }
         });
     }
@@ -127,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         audioRecorder.stop();
         audioRecorder.release();
         recorderTask.cancel(true);
-        printTimes();
+        sendMail();
     }
 
     /*
@@ -153,18 +150,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.i("IGOR", intervalList.toString());
-        sendMail(intervalList);
         popTimes.clear();
         intervalList.clear();
     }
 
 
-    private void sendMail(LinkedList<Integer> intervalList){
+    private void sendMail(){
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"or.zzamir@gmail.com"});
         i.putExtra(Intent.EXTRA_SUBJECT, "suck dick or");
-        i.putExtra(Intent.EXTRA_TEXT   , intervalList.toString());
+        i.putExtra(Intent.EXTRA_TEXT   , popIndexList.toString());
         try {
             startActivity(Intent.createChooser(i, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
@@ -172,47 +168,47 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void sendRecording(){
-        //Set output file path
-        final String fileName = getExternalCacheDir().getAbsolutePath()+"n.txt";
-        Log.i("OUTPUT_FILE", fileName);
-        //Attempt file creation
-        final File root = new File(fileName);
-        if(!root.canWrite()){
-            Log.i("DEBUG", "Cannot write");
-        }
-        //Save data to file
-        DataOutputStream fos = null;
-        try {
-            fos = new DataOutputStream(new FileOutputStream(root));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-//        int recorded = segmentCount*bufferSize;
-        for(int d=0; d<recordingList.size(); d++) {
-            try {
-                fos.writeShort((int)recordingList.get(d));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        String filename=root.getName();
-        Uri path = Uri.fromFile(root);
-        Intent emailIntent = new Intent(Intent.ACTION_SEND); // set the type to 'email'
-        emailIntent .setType("vnd.android.cursor.dir/email");
-        String to[] = {"or.zzamir@gmail.com"};
-        emailIntent .putExtra(Intent.EXTRA_EMAIL, to);// the attachment
-        emailIntent .putExtra(Intent.EXTRA_STREAM, Uri.parse(path.toString()));// the mail subject
-        emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
-        startActivity(Intent.createChooser(emailIntent , "Send email..."));
-        //END of File Saving
-
-    }
+//    private void sendRecording(){
+//        //Set output file path
+//        final String fileName = getExternalCacheDir().getAbsolutePath()+"n.txt";
+//        Log.i("OUTPUT_FILE", fileName);
+//        //Attempt file creation
+//        final File root = new File(fileName);
+//        if(!root.canWrite()){
+//            Log.i("DEBUG", "Cannot write");
+//        }
+//        //Save data to file
+//        DataOutputStream fos = null;
+//        try {
+//            fos = new DataOutputStream(new FileOutputStream(root));
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+////        int recorded = segmentCount*bufferSize;
+//        for(int d=0; d<recordingList.size(); d++) {
+//            try {
+//                fos.writeShort((int)recordingList.get(d));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        try {
+//            fos.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+////        String filename=root.getName();
+//        Uri path = Uri.fromFile(root);
+//        Intent emailIntent = new Intent(Intent.ACTION_SEND); // set the type to 'email'
+//        emailIntent .setType("vnd.android.cursor.dir/email");
+//        String to[] = {"or.zzamir@gmail.com"};
+//        emailIntent .putExtra(Intent.EXTRA_EMAIL, to);// the attachment
+//        emailIntent .putExtra(Intent.EXTRA_STREAM, Uri.parse(path.toString()));// the mail subject
+//        emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+//        startActivity(Intent.createChooser(emailIntent , "Send email..."));
+//        //END of File Saving
+//
+//    }
 
 
 
@@ -310,6 +306,9 @@ public class MainActivity extends AppCompatActivity {
             // DEBUG
             // Print the list
             Log.i("IGOR", popIndexList.toString());
+            //DEBUG
+
+
 
             if (stopCondition.conditionSatisfied(popIndexList)) {
                 Log.i("IGOR", "PROCESSOR - I AM SATISFIED");
