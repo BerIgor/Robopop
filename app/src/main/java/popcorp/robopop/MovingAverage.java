@@ -53,4 +53,8 @@ public class MovingAverage implements PeakFinder{
         //TODO: Change to return the number of peaks found in this segment
         return 0;
     }
+
+    public void reset(){
+        totalIndex = 1;
+    }
 }

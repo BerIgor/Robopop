@@ -12,8 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private PeakFinder peakFinder = null;
 
     private int desiredIntervalSeconds = 2;
-    private int desiredPopCount = 460;
+
     private Button stopButton = null;
 
     private int windowSize = 2;
@@ -71,8 +73,13 @@ public class MainActivity extends AppCompatActivity {
  //       int cunt = audioRecorder.getBufferSizeInFrames();
  //       Log.i("IGOR", "MAIN - buffer size in frames " + (new Integer(cunt)).toString());
 
+        // Calculate pop width (to define window in which we ignore extra pops)
+        int popWidth = (int)(0.02*sampleRate);
+
+        Log.i("IGOR", "MAIN - pop width " + (new Integer(popWidth)).toString());
+
         // Processor Setup
-        peakFinder = new MovingAverage(10, 700);
+        peakFinder = new MovingAverage(10, popWidth);
 
         // Task Creation
         recorderTask = new RecorderTask();
@@ -116,36 +123,56 @@ public class MainActivity extends AppCompatActivity {
     Method for stopping recording and processing
      */
     private void stopAll() {
+        peakFinder.reset();
         audioRecorder.stop();
         audioRecorder.release();
         recorderTask.cancel(true);
+        printTimes();
+    }
+
+    /*
+    Method for debugging purposes- will print a list of times
+     */
+    private void printTimes(){
+        LinkedList<Integer> popTimes = new LinkedList<>();
+        Iterator<Integer> it = popIndexList.iterator();
+        while(it.hasNext()){
+            popTimes.addLast(new Integer((int)(1000*((double)it.next()/sampleRate))));
+        }
+        Log.i("IGOR", popTimes.toString());
+
+
+        LinkedList<Integer> intervalList = new LinkedList<>();
+        Integer current;
+        Integer previous = new Integer(0);
+        for(int i=0; i<popTimes.size(); i++){
+            current = popTimes.get(i);
+            Integer diff = new Integer(current - previous);
+            previous = current;
+            intervalList.add(diff);
+        }
+
+        Log.i("IGOR", intervalList.toString());
+        sendMail(intervalList);
+        popTimes.clear();
+        intervalList.clear();
     }
 
 
-//        //TODO: REMOVE
-//        addToArray();
-//        //TODO: STOP REMOVE
-//
-//        Log.i("MAIN", popIndexList.toString());
-//        Log.i("MAIN- GOT ", (new Integer(popIndexList.size())).toString());
+    private void sendMail(LinkedList<Integer> intervalList){
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"or.zzamir@gmail.com"});
+        i.putExtra(Intent.EXTRA_SUBJECT, "suck dick or");
+        i.putExtra(Intent.EXTRA_TEXT   , intervalList.toString());
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(MainActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-
-
-//    //TODO: Remove below here
-//    private LinkedList<Short> recordingList = new LinkedList<>();
-//    private int arrayIndex = 0;
-//    private int segmentCount = 0;
-
-//    Adds the amplitude of peaks
-//    public void addToArray(){
-//        for(int i=0; i<bufferSize; i++){
-//            recordingList.add(recording[arrayIndex][i]);
-//        }
-//        arrayIndex = 1 - arrayIndex;
-//    }
-/*
-    public void summarize(){
-
+    private void sendRecording(){
         //Set output file path
         final String fileName = getExternalCacheDir().getAbsolutePath()+"n.txt";
         Log.i("OUTPUT_FILE", fileName);
@@ -154,17 +181,14 @@ public class MainActivity extends AppCompatActivity {
         if(!root.canWrite()){
             Log.i("DEBUG", "Cannot write");
         }
-
         //Save data to file
         DataOutputStream fos = null;
-
         try {
-             fos = new DataOutputStream(new FileOutputStream(root));
+            fos = new DataOutputStream(new FileOutputStream(root));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 //        int recorded = segmentCount*bufferSize;
-
         for(int d=0; d<recordingList.size(); d++) {
             try {
                 fos.writeShort((int)recordingList.get(d));
@@ -172,13 +196,11 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
         try {
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 //        String filename=root.getName();
         Uri path = Uri.fromFile(root);
         Intent emailIntent = new Intent(Intent.ACTION_SEND); // set the type to 'email'
@@ -189,13 +211,11 @@ public class MainActivity extends AppCompatActivity {
         emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
         startActivity(Intent.createChooser(emailIntent , "Send email..."));
         //END of File Saving
-    }
-    //TODO: STOP REMOVE
-
-    public void restart(){
 
     }
-*/
+
+
+
 
     //===================Recorder Task===============================//
     private class RecorderTask extends AsyncTask <Object, Object, Object> implements AudioRecord.OnRecordPositionUpdateListener{
@@ -223,7 +243,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Object... values) {
             super.onProgressUpdate(values);
-            Log.i("IGOR", "RECORDER - onProgressUpdate - "+Thread.currentThread().getName().toString());
             processorTask.execute();
             return;
         }
