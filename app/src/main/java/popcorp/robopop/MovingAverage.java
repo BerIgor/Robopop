@@ -21,7 +21,7 @@ public class MovingAverage implements PeakFinder{
     }
 
     @Override
-    public int getPops(LinkedList<Integer> peakList, final short[] recording, int length){
+    public void getPops(LinkedList<Integer> peakList, final short[] recording, int length){
         float average = (float)recording[0];
         int i=1;
 
@@ -50,8 +50,7 @@ public class MovingAverage implements PeakFinder{
             }
             totalIndex++;
         }
-        //TODO: Change to return the number of peaks found in this segment
-        return 0;
+        return;
     }
 
     public void reset(){

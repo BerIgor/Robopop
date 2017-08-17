@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 public interface PeakFinder {
 
-        int getPops(LinkedList<Integer> peakList, final short[] recording, int length);
+        void getPops(LinkedList<Integer> peakList, final short[] recording, int length);
 
         void reset();
 
