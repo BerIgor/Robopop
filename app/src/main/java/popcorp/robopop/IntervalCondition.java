@@ -29,16 +29,18 @@ class IntervalCondition extends StopCondition {
 
 //    private int previousWindowSize = 0;
     private int maxWindowSize = 0;
-    private int startIndex = 150*sampleRate;  // The number represents the seconds from recording start
+//    private int startIndex = 150*sampleRate;  // The number represents the seconds from recording start
     private boolean havePeaked = false;
+    private int startIndex;
     private int currentIndex = 0;
     private int counter = 0;
     private int currentWindowSize = 0;
 
     //====Methods====//
-    IntervalCondition(LinkedList<Integer> popList, int desiredInterval){
+    IntervalCondition(LinkedList<Integer> popList, int desiredInterval, int powerSetting){
         super(popList);
         this.desiredInterval=desiredInterval;
+        startIndex = (150 - (30*powerSetting)) * sampleRate;
     }
 
     @Override

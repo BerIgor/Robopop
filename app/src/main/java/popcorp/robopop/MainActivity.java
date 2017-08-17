@@ -41,13 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private StopCondition stopCondition = null;
     private PeakFinder peakFinder = null;
 
-//    private int desiredIntervalSeconds = 2;
-
     private Button stopButton = null;
 
-//    private int windowSize = 4;
-
-//    public static int sampleRate = 44100;
     public int bufferSize = -1; //TODO: Check premissions
 
     public static short recording[][] = null;
@@ -83,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("IGOR", "MAIN - pop width " + (new Integer(popWidth)).toString());
 
         // Processor Setup
-//        peakFinder = new MovingAverage(8, sPopWidth);
+//        peakFinder = new MovingAverage(factor, popWidth);
         peakFinder = new ZamirBerendorf(factor, popWidth);
 
         // Task Creation
@@ -104,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i("IGOR", "MAIN - on STOP");
                 stopAll(MainActivity.this);
+                //TODO: return this when you remove the mail thing
 //                startActivity(startupIntent);
             }
         });
@@ -113,11 +109,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
         Log.i("IGOR", "MAIN - onStart");
+
         popIndexList = new LinkedList<>(); // Data structure for peak indices
         recording = new short[2][bufferSize];
 
         // Stop Condition
-        stopCondition = new IntervalCondition(popIndexList, sampleRate * desiredIntervalSeconds);
+        // Process the power selected
+        int power = getIntent().getIntExtra("Power", 0);
+        stopCondition = new IntervalCondition(popIndexList, sampleRate * desiredIntervalSeconds, power);
 //        stopCondition = new CountingCondition(desiredPopCount);
 
         // Start the Recorder Thread

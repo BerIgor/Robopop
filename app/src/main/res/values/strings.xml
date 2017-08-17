@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">RoboPop</string>
+    <string-array name="powerArray">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+
 </resources>
