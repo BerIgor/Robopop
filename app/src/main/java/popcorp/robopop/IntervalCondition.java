@@ -9,22 +9,21 @@ import static java.lang.Integer.valueOf;
 import static java.lang.Math.max;
 import static popcorp.robopop.MainActivity.sampleRate;
 
-
-/*
-This class will check for an interval condition satisfaction.
-The List passed to conditionSatisfied should be as such:
-E(i) is the i-th element of the list, then
-E(i).value represents the sample number of the recording.
-
-conditionSatisfied will return true if for any E(i+1)-E(i)>=desiredInterval
-
-The list is a continuously growing list, meaning in each call to this function the list will have
-an increased size compared to the previous call. But we're only interested in the new section,
-therefore, using the private member previousPopCount, we can discard any old entries.
+/**
+ * This class will check for an interval condition satisfaction.
+ * The List passed to conditionSatisfied should be as such:
+ * E(i) is the i-th element of the list, then
+ * E(i).value represents the sample number of the recording.
+ *
+ * conditionSatisfied will return true if for any E(i+1)-E(i)>=desiredInterval
+ *
+ * The list is a continuously growing list, meaning in each call to this function the list will have
+ * an increased size compared to the previous call. But we're only interested in the new section,
+ * therefore, using the private member previousPopCount, we can discard any old entries.
  */
 class IntervalCondition implements StopCondition {
-//TODO: Start considering interval condition only after certain period of time
 
+    //====Variables====//
     private int previousPopCount = 0;
     private int desiredInterval = -1; //Desired interval in indices
 
@@ -34,10 +33,9 @@ class IntervalCondition implements StopCondition {
     private boolean havePeaked = false;
     private int currentIndex = 0;
     private int counter = 0;
-
-    //////////////////////////
     private int currentWindowSize = 0;
 
+    //====Methods====//
     IntervalCondition(int desiredInterval){
         this.desiredInterval=desiredInterval;
     }

@@ -35,15 +35,14 @@ import java.util.LinkedList;
  * s.t. Der.length == Arr.length-1
  *
  */
-public class ZamirBerendorf implements PeakFinder {
+public class ZamirBerendorf extends PeakFinder {
 
     //==== Variables ====//
     private double averageDerivative = 0;
     private int totalIndex = 0;  // This variable holds the total index of the recording so far
     private boolean firstWindow = true;
     private boolean secondWindow = true;
-    private int factor = 0;
-    private int popWidth = 0;
+
 
 
 
@@ -54,8 +53,7 @@ public class ZamirBerendorf implements PeakFinder {
      * @param popWidth, is the width in indices of each expected peak (pop)
      */
     public ZamirBerendorf(int factor, int popWidth){
-        this.factor = factor;
-        this.popWidth = popWidth;
+        super(factor, popWidth);
     }
 
     /**

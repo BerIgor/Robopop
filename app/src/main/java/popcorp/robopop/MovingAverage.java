@@ -5,21 +5,29 @@ import android.util.Log;
 import java.util.LinkedList;
 
 
-public class MovingAverage implements PeakFinder{
+public class MovingAverage extends PeakFinder{
 
 
     //====== Variables ======//
-    private int thresholdFactor;
-    private int popWidth;
     private static int totalIndex = 1;
 
     //====== Methods ======//
-    // C'tor
-    public MovingAverage(int thresholdFactor,int popWidth){
-        this.thresholdFactor=thresholdFactor;
-        this.popWidth=popWidth;
+    /**
+     * C'tor
+     * @param factor, the factor to be used for peak threshold calculation
+     * @param popWidth, is the width in indices of each expected peak (pop)
+     */
+    public MovingAverage(int factor, int popWidth){
+        super(factor, popWidth);
     }
 
+    /**
+     * The works of this class
+     *
+     * @param peakList, is a List to be updated with the found peaks
+     * @param recording, is an array holding the audio recording
+     * @param length, is the length of the array "recording"
+     */
     @Override
     public void getPops(LinkedList<Integer> peakList, final short[] recording, int length){
         float average = (float)recording[0];
@@ -39,7 +47,7 @@ public class MovingAverage implements PeakFinder{
 
         for(; i<length; i++){
             average = (average*i+absRecording[i])/(i+1);
-            if(absRecording[i]>thresholdFactor*average){
+            if(absRecording[i]>factor*average){
                 //It's a peak
                 peakList.add(totalIndex);//was i instead of totalIndex
                 int nextStep=Math.min(i+popWidth,length);
@@ -53,6 +61,9 @@ public class MovingAverage implements PeakFinder{
         return;
     }
 
+    /**
+     * Resets values used by the class
+     */
     public void reset(){
         totalIndex = 1;
     }
