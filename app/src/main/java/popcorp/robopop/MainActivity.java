@@ -25,6 +25,13 @@ import static android.media.AudioFormat.ENCODING_PCM_16BIT;
 public class MainActivity extends AppCompatActivity {
 
 
+    //===== Constants =====//
+    static final int desiredIntervalSeconds = 2;
+    static final int windowSize = 4;
+    static final int sampleRate = 44100;
+    static final int factor = 25;
+    static final double sPopWidth = 0.03; // pop width in seconds
+
     //====== Variables ======//
     // Recorder and Processor Tasks
     private RecorderTask recorderTask = null;
@@ -34,13 +41,13 @@ public class MainActivity extends AppCompatActivity {
     private StopCondition stopCondition = null;
     private PeakFinder peakFinder = null;
 
-    private int desiredIntervalSeconds = 2;
+//    private int desiredIntervalSeconds = 2;
 
     private Button stopButton = null;
 
-    private int windowSize = 4;
+//    private int windowSize = 4;
 
-    public static int sampleRate = 44100;
+//    public static int sampleRate = 44100;
     public int bufferSize = -1; //TODO: Check premissions
 
     public static short recording[][] = null;
@@ -70,14 +77,14 @@ public class MainActivity extends AppCompatActivity {
         bufferSize = windowSize * sampleRate;
         audioRecorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, CHANNEL_IN_MONO, ENCODING_PCM_16BIT, 2*bufferSize);
 
-        // Calculate pop width (to define window in which we ignore extra pops)
-        int popWidth = (int)(0.0025*sampleRate);
+        // Calculate pop width (to define window in which we ignore extra pops) in samples
+        int popWidth = (int)(sPopWidth*sampleRate);
 
         Log.i("IGOR", "MAIN - pop width " + (new Integer(popWidth)).toString());
 
         // Processor Setup
-//        peakFinder = new MovingAverage(8, popWidth);
-        peakFinder = new ZamirBerendorf(27, popWidth);
+//        peakFinder = new MovingAverage(8, sPopWidth);
+        peakFinder = new ZamirBerendorf(factor, popWidth);
 
         // Task Creation
         recorderTask = new RecorderTask();
