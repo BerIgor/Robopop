@@ -82,7 +82,7 @@ public class ZamirBerendorf extends PeakFinder {
             return;
         } else if (secondWindow){
             // Ignore the second window, but calculate the derivative average
-            setAverageDerivative(modifiedRecording, length);
+            averageDerivative = setAverageDerivative(modifiedRecording, length);
             secondWindow = false;
             totalIndex += length;
             return;
@@ -125,12 +125,12 @@ public class ZamirBerendorf extends PeakFinder {
      * @param recording is the array from which the average derivative is to be calculated
      * @param length is the length of the array
      */
-    private void setAverageDerivative(short[] recording, int length){
+    private static double setAverageDerivative(short[] recording, int length){
         int sum = 0;
         for (int i=0; i<(length-1); i++){
             sum += Math.abs(recording[i+1] - recording[i]);
         }
-        averageDerivative = sum/length;
+        return sum/length;
     }
 
 
@@ -145,7 +145,7 @@ public class ZamirBerendorf extends PeakFinder {
      * @param length of the array array
      * @return the new length of the array, which is (length-1)
      */
-    private int calculateDerivative(short[] array, int length){
+    private static int calculateDerivative(short[] array, int length){
         int newLength = length - 1;
         for (int i=0; i<(length-1); i++){
             array[i] = (short) (array[i+1] - array[i]);

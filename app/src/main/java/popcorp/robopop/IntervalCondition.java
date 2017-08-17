@@ -21,13 +21,13 @@ import static popcorp.robopop.MainActivity.sampleRate;
  * an increased size compared to the previous call. But we're only interested in the new section,
  * therefore, using the private member previousPopCount, we can discard any old entries.
  */
-class IntervalCondition implements StopCondition {
+class IntervalCondition extends StopCondition {
 
     //====Variables====//
     private int previousPopCount = 0;
     private int desiredInterval = -1; //Desired interval in indices
 
-    private int previousWindowSize = 0;
+//    private int previousWindowSize = 0;
     private int maxWindowSize = 0;
     private int startIndex = 150*sampleRate;  // The number represents the seconds from recording start
     private boolean havePeaked = false;
@@ -36,36 +36,37 @@ class IntervalCondition implements StopCondition {
     private int currentWindowSize = 0;
 
     //====Methods====//
-    IntervalCondition(int desiredInterval){
+    IntervalCondition(LinkedList<Integer> popList, int desiredInterval){
+        super(popList);
         this.desiredInterval=desiredInterval;
     }
 
     @Override
-    public boolean conditionSatisfied(LinkedList<Integer> popList) {
+    public boolean conditionSatisfied() {
 
         boolean conditionSatisfied = false;
 
         // Calculate
-        setCurrentWindowSize(popList);
+        currentWindowSize = setCurrentWindowSize(popList, previousPopCount);
         setPeaked();
-        setCurrentIndex(popList);
+        currentIndex = setCurrentIndex(popList);
 
         // Check satisfaction
-        if(currentIndex >= startIndex && havePeaked && satisfiedInterval(popList)){
+        if(currentIndex >= startIndex && havePeaked && satisfiedInterval(popList, previousPopCount, currentWindowSize, desiredInterval)){
             conditionSatisfied = true;
         }
         // Calculate for next iteration
-        previousWindowSize = currentWindowSize;
+//        previousWindowSize = currentWindowSize;
         previousPopCount = popList.size();
 
         return conditionSatisfied;
     }
 
 
-    private boolean satisfiedInterval(LinkedList<Integer> popList){
+    private static boolean satisfiedInterval(LinkedList<Integer> popList, int previousPopCount, int currentWindowSize, int desiredInterval){
         Log.i("IGOR", "INTERVAL - CHECKING");
         Iterator<Integer> iterator = popList.listIterator(max(previousPopCount - 1, 0));
-        Integer previous = null;
+        Integer previous;
         Integer current = null;
 
         if(currentWindowSize == 0){
@@ -104,14 +105,14 @@ class IntervalCondition implements StopCondition {
         }
     }
 
-    private void setCurrentWindowSize(LinkedList<Integer> popList){
-        currentWindowSize = popList.size() - previousPopCount;
+    private static int setCurrentWindowSize(LinkedList<Integer> popList, int previousPopCount){
+        return (popList.size() - previousPopCount);
     }
 
-    private void setCurrentIndex(LinkedList<Integer> popList){
+    private static int setCurrentIndex(LinkedList<Integer> popList){
         if(popList.size() <= 0) {
-            return;
+            return 0;
         }
-        currentIndex = popList.getLast();
+        return popList.getLast();
     }
 }

@@ -6,16 +6,17 @@ import java.util.LinkedList;
 This class will return true using the conditionSatisfied method if the number of elements
 in the popList is greater or equal to the desired index count
  */
-public class CountingCondition implements StopCondition {
+public class CountingCondition extends StopCondition {
 
     private int desiredIndexCount = -1;
 
-    CountingCondition(int desiredIndexCount){
+    CountingCondition(LinkedList<Integer> popList, int desiredIndexCount){
+        super(popList);
         this.desiredIndexCount = desiredIndexCount;
     }
 
     @Override
-    public boolean conditionSatisfied(LinkedList<Integer> popList) {
+    public boolean conditionSatisfied() {
         if (popList.size() >= desiredIndexCount) {
             return true;
         }

@@ -71,13 +71,13 @@ public class MainActivity extends AppCompatActivity {
         audioRecorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, CHANNEL_IN_MONO, ENCODING_PCM_16BIT, 2*bufferSize);
 
         // Calculate pop width (to define window in which we ignore extra pops)
-        int popWidth = (int)(0.03*sampleRate);
+        int popWidth = (int)(0.0025*sampleRate);
 
         Log.i("IGOR", "MAIN - pop width " + (new Integer(popWidth)).toString());
 
         // Processor Setup
 //        peakFinder = new MovingAverage(8, popWidth);
-        peakFinder = new ZamirBerendorf(30, popWidth);
+        peakFinder = new ZamirBerendorf(27, popWidth);
 
         // Task Creation
         recorderTask = new RecorderTask();
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("IGOR", "MAIN - on STOP");
-                stopAll();
+                stopAll(MainActivity.this);
 //                startActivity(startupIntent);
             }
         });
@@ -106,11 +106,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
         Log.i("IGOR", "MAIN - onStart");
-        popIndexList = new LinkedList<Integer>(); // Data structure for peak indices
+        popIndexList = new LinkedList<>(); // Data structure for peak indices
         recording = new short[2][bufferSize];
 
         // Stop Condition
-        stopCondition = new IntervalCondition(sampleRate * desiredIntervalSeconds);
+        stopCondition = new IntervalCondition(popIndexList, sampleRate * desiredIntervalSeconds);
 //        stopCondition = new CountingCondition(desiredPopCount);
 
         // Start the Recorder Thread
@@ -120,12 +120,12 @@ public class MainActivity extends AppCompatActivity {
     /*
     Method for stopping recording and processing
      */
-    private void stopAll() {
-        peakFinder.reset();
-        audioRecorder.stop();
-        audioRecorder.release();
-        recorderTask.cancel(true);
-        sendMail();
+    private static void stopAll(MainActivity mainActivity) {
+        mainActivity.peakFinder.reset();
+        mainActivity.audioRecorder.stop();
+        mainActivity.audioRecorder.release();
+        mainActivity.recorderTask.cancel(true);
+        sendMail(mainActivity); //TODO: Remove when done developing
     }
 
     /*
@@ -156,16 +156,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void sendMail(){
+    private static void sendMail(MainActivity mainActivity){
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"or.zzamir@gmail.com"});
         i.putExtra(Intent.EXTRA_SUBJECT, "suck dick or");
-        i.putExtra(Intent.EXTRA_TEXT   , popIndexList.toString());
+        i.putExtra(Intent.EXTRA_TEXT   , mainActivity.popIndexList.toString());
         try {
-            startActivity(Intent.createChooser(i, "Send mail..."));
+            mainActivity.startActivity(Intent.createChooser(i, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(MainActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mainActivity, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -311,9 +311,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-            if (stopCondition.conditionSatisfied(popIndexList)) {
+            if (stopCondition.conditionSatisfied()) {
                 Log.i("IGOR", "PROCESSOR - I AM SATISFIED");
-                stopAll();
+                stopAll(MainActivity.this);
                 mediaPlayer.start(); // no need to call prepare(); create() does that for you
                 // Alert Dialog
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
