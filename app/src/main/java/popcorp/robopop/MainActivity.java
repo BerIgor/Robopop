@@ -76,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
         Log.i("IGOR", "MAIN - pop width " + (new Integer(popWidth)).toString());
 
         // Processor Setup
-        peakFinder = new MovingAverage(8, popWidth);
+//        peakFinder = new MovingAverage(8, popWidth);
+        peakFinder = new ZamirBerendorf(30, popWidth);
 
         // Task Creation
         recorderTask = new RecorderTask();
