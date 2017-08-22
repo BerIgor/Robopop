@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Media Player - for final notification
         mediaPlayer = new MediaPlayer();
-        mediaPlayer = MediaPlayer.create(this, getIntent().getIntExtra("Sound", 0));
+        mediaPlayer = MediaPlayer.create(this, getIntent().getIntExtra("Sound", R.raw.sound0));
 
         Log.i("IGOR", "MAIN - buffer size " + (new Integer(bufferSize)).toString());
 

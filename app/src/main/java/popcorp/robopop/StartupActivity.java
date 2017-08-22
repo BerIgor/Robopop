@@ -11,8 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -36,7 +35,7 @@ public class StartupActivity extends AppCompatActivity {
 
         // ====Layout Creation====
         // Start Button
-        Button startButton = (Button)findViewById(R.id.StartButton); // Create Start Button
+        ImageButton startButton = (ImageButton) findViewById(R.id.StartButton); // Create Start Button
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +46,7 @@ public class StartupActivity extends AppCompatActivity {
         });
 
         // Exit Button
-        Button exitButton = (Button)findViewById(R.id.ExitButton);
+        ImageButton exitButton = (ImageButton)findViewById(R.id.ExitButton);
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -55,11 +54,6 @@ public class StartupActivity extends AppCompatActivity {
             }
         });
 
-        // Text
-        TextView welcomeText = (TextView)findViewById(R.id.WelcomeText);
-        String welcomeTextText = "How powerful is your microwave?";
-        welcomeText.setText(welcomeTextText);
-        welcomeText.setText(welcomeTextText); //TODO: remove (why twice?)
 
         // Power Selector
         final Spinner powerSpinner = (Spinner)findViewById(R.id.PowerSpinner);
