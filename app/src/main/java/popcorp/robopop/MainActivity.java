@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Media Player - for final notification
         mediaPlayer = new MediaPlayer();
-        mediaPlayer = MediaPlayer.create(this, R.raw.sound);
+        mediaPlayer = MediaPlayer.create(this, getIntent().getIntExtra("Sound", 0));
 
         Log.i("IGOR", "MAIN - buffer size " + (new Integer(bufferSize)).toString());
 
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         recording = new short[2][bufferSize];
 
         // Stop Condition
-        // Process the power selected
+        // Process the power and sound selected
         int power = getIntent().getIntExtra("Power", 0);
         stopCondition = new IntervalCondition(popIndexList, sampleRate * desiredIntervalSeconds, power);
 //        stopCondition = new CountingCondition(desiredPopCount);
@@ -314,7 +314,6 @@ public class MainActivity extends AppCompatActivity {
             // Print the list
             Log.i("IGOR", popIndexList.toString());
             //DEBUG
-
 
 
             if (stopCondition.conditionSatisfied()) {

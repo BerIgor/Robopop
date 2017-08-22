@@ -6,4 +6,12 @@
         <item>High</item>
     </string-array>
 
+    <string-array name="soundArray">
+        <item>Halleluya</item>
+        <item>Sound1</item>
+        <item>Sound2</item>
+        <item>Sound3</item>
+        <item>Sound4</item>
+    </string-array>
+
 </resources>
