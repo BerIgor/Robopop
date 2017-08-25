@@ -23,7 +23,7 @@ This activity will be the first one opened when the app is launched.
 public class StartupActivity extends AppCompatActivity {
 
     private int selectedPower = 0;
-    private int selectedSound = 0;
+    private int selectedSound = R.raw.sound0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +42,6 @@ public class StartupActivity extends AppCompatActivity {
                 mainIntent.putExtra("Power", selectedPower);
                 mainIntent.putExtra("Sound", selectedSound);
                 startActivity(mainIntent);
-            }
-        });
-
-        // Exit Button
-        ImageButton exitButton = (ImageButton)findViewById(R.id.ExitButton);
-        exitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                finish(); System.exit(0);
             }
         });
 

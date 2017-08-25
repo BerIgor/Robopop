@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("IGOR", "MAIN - on STOP");
                 stopAll(MainActivity.this);
                 //TODO: return this when you remove the mail thing
-//                startActivity(startupIntent);
+                startActivity(startupIntent);
             }
         });
     }
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         mainActivity.audioRecorder.stop();
         mainActivity.audioRecorder.release();
         mainActivity.recorderTask.cancel(true);
-        sendMail(mainActivity); //TODO: Remove when done developing
+//        sendMail(mainActivity); //TODO: Remove when done developing
     }
 
     /*
