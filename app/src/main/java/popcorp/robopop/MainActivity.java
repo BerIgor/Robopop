@@ -11,8 +11,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckedTextView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.Iterator;
@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer = null;
 
     // Layout Items
-    CheckedTextView noiseCheckBox = null;
-    CheckedTextView peakCheckBox = null;
-    CheckedTextView intervalCheckBox = null;
+    ImageView noiseStep = null;
+    ImageView peakStep = null;
+    ImageView intervalStep = null;
 
 
     //====== Methods ======//
@@ -95,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
         stopButton = (ImageButton)findViewById(R.id.stopButton);
 
         //Check boxes
-        noiseCheckBox = (CheckedTextView )findViewById(R.id.noiseCheckBox);
-        peakCheckBox = (CheckedTextView )findViewById(R.id.peakCheckBox);
-        intervalCheckBox = (CheckedTextView )findViewById(R.id.intervalCheckBox);
+        noiseStep = (ImageView) findViewById(R.id.noiseStep);
+        peakStep = (ImageView)findViewById(R.id.peakStep);
+        intervalStep = (ImageView)findViewById(R.id.intervalStep);
 
 
         // ====End of Layout Creation====
@@ -310,15 +310,19 @@ public class MainActivity extends AppCompatActivity {
                 int currentCondition = stopCondition.getCurrentCondition();
                 switch (currentCondition){
                     case 0:
+                        Log.i("OR", "CASE 0");
                         break;
                     case 1:
-                        noiseCheckBox.setChecked(true);
+                        Log.i("OR", "CASE 1");
+                        noiseStep.setImageResource(R.drawable.popped_kernel);
                         break;
                     case 2:
-                        peakCheckBox.setChecked(true);
+                        Log.i("OR", "CASE 2");
+                        peakStep.setImageResource(R.drawable.popped_kernel);
                         break;
                     case 3:
-                        intervalCheckBox.setChecked(true);
+                        Log.i("OR", "CASE 3");
+                        intervalStep.setImageResource(R.drawable.popped_kernel);
                         break;
                 }
 

@@ -2,6 +2,7 @@ package popcorp.robopop;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +47,15 @@ public class StartupActivity extends AppCompatActivity {
                 mainIntent.putExtra("Power", selectedPower);
                 mainIntent.putExtra("Sound", selectedSound);
                 startActivity(mainIntent);
+            }
+        });
+
+        // Power Button
+        ImageButton powerButton = (ImageButton)findViewById(R.id.powerButton);
+        powerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: Add selection and shit
             }
         });
 
