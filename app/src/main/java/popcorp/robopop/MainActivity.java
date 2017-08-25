@@ -2,6 +2,7 @@ package popcorp.robopop;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -13,7 +14,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -94,11 +98,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         stopButton = (ImageButton)findViewById(R.id.stopButton);
 
-        //Check boxes
+        // Kernel Steps
         noiseStep = (ImageView) findViewById(R.id.noiseStep);
         peakStep = (ImageView)findViewById(R.id.peakStep);
         intervalStep = (ImageView)findViewById(R.id.intervalStep);
+        // Text Steps - setting font
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/myfont.ttf");
+        TextView noiseText = (TextView)findViewById(R.id.noiseStepText);
+        TextView peakText = (TextView)findViewById(R.id.peakStepText);
+        TextView intervalText = (TextView)findViewById(R.id.intervalStepText);
 
+        noiseText.setTypeface(typeface);
+        peakText.setTypeface(typeface);
+        intervalText.setTypeface(typeface);
 
         // ====End of Layout Creation====
 

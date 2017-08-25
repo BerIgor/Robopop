@@ -50,12 +50,24 @@ public class StartupActivity extends AppCompatActivity {
             }
         });
 
+
+
         // Power Button
         ImageButton powerButton = (ImageButton)findViewById(R.id.powerButton);
         powerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Add selection and shit
+                // Create dialogue for power selection
+                AlertDialog.Builder powerAlertDialogBuilder = new AlertDialog.Builder(StartupActivity.this, R.style.MyDialogTheme);
+                String alertTitle = "Choose Microwave Power";
+                powerAlertDialogBuilder.setTitle(alertTitle).setItems(R.array.powerArray, new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int which){
+                        selectedPower = which;
+                        Log.i("IGOR", "STARTUP - Power selected == " + (new Integer(which)).toString());
+                    }
+                });
+                AlertDialog alertDialog = powerAlertDialogBuilder.create();
+                alertDialog.show();
             }
         });
 
@@ -64,28 +76,6 @@ public class StartupActivity extends AppCompatActivity {
         rotation.setFillAfter(true);
         ImageView spinningLight = (ImageView) findViewById(R.id.spinningLight);
         spinningLight.startAnimation(rotation);
-
-
-        // Power Selector
-        final Spinner powerSpinner = (Spinner)findViewById(R.id.PowerSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.powerArray, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        powerSpinner.setAdapter(adapter);
-
-        powerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedPower = position;
-                Log.i("IGOR", "STARTUP - Power selected == " + (new Integer(selectedPower)).toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
 
 
     }
@@ -119,7 +109,7 @@ public class StartupActivity extends AppCompatActivity {
     }
 
     public void dialogConstructor(String title, String message){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(StartupActivity.this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(StartupActivity.this, R.style.MyDialogTheme);
         String alertTitle = title;
         String alertMessage = message;
         String alertButtonText = "Okay";
@@ -138,8 +128,6 @@ public class StartupActivity extends AppCompatActivity {
     public void dialogSoundConstructor(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(StartupActivity.this);
         String alertTitle = "Sound";
-        //String alertMessage = "Choose your sound";
-        String alertButtonText = "Okay";
         alertDialogBuilder.setTitle(alertTitle).setItems(R.array.soundArray, new DialogInterface.OnClickListener(){
             public void onClick(DialogInterface dialog, int which){
                 selectedSound = which;
@@ -162,13 +150,6 @@ public class StartupActivity extends AppCompatActivity {
                 Log.i("IGOR", "STARTUP - Sound selected == " + (new Integer(which)).toString());
             }
         });
-       /* alertDialogBuilder.setCancelable(false);
-        alertDialogBuilder.setPositiveButton(alertButtonText, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id){
-
-            }
-        });*/
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }

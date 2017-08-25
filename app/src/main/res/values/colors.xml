@@ -11,4 +11,8 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorRed">#FF0000</color>
     <color name="colorBlack">#000000</color>
+    <color name="lightRed">#FF6464</color>
+    <color name="foreground_material_dark">#0316e7</color>
+    <color name="primary_text_default_material_dark">#1004ff</color>
+    <color name="primary_text_material_dark">@android:color/holo_blue_dark</color>
 </resources>

@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorYellow0</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionOverflowButtonStyle">@style/MyActionButtonOverFlow</item>
+        <item name="android:colorBackground">@color/colorYellow1</item>
     </style>
 
 
@@ -14,6 +15,16 @@
         <!-- Customize your theme here. -->
         <item name="android:src">@android:drawable/ic_menu_preferences</item>
         <item name="android:background">?android:attr/actionBarItemBackground</item>
-        <item name="android:contentDescription">"SUCK DICK IGOR"</item>
+        <item name="android:contentDescription">"NO DICK SUCKING"</item>
     </style>
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorPrimary">@color/colorYellow1</item>
+        <item name="colorPrimaryDark">@color/colorYellow0</item>
+        <item name="colorAccent">@color/colorYellow0</item>
+        <item name="android:colorBackground">@color/colorYellow1</item>
+        <item name="android:textColor">@color/lightRed</item>
+        <item name="android:textColorPrimary">@color/lightRed</item>
+    </style>
+
 </resources>
