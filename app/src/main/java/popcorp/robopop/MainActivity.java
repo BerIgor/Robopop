@@ -11,13 +11,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.CheckedTextView;
+import android.widget.ImageButton;
 import android.widget.Toast;
-
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 import static android.media.AudioFormat.CHANNEL_IN_MONO;
 import static android.media.AudioFormat.ENCODING_PCM_16BIT;
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private StopCondition stopCondition = null;
     private PeakFinder peakFinder = null;
 
-    private Button stopButton = null;
+    private ImageButton stopButton = null;
 
     public int bufferSize = -1; //TODO: Check premissions
 
@@ -52,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
     private Intent startupIntent = null;
 
     private MediaPlayer mediaPlayer = null;
+
+    // Layout Items
+    CheckedTextView noiseCheckBox = null;
+    CheckedTextView peakCheckBox = null;
+    CheckedTextView intervalCheckBox = null;
+
 
     //====== Methods ======//
     @Override
@@ -87,7 +92,14 @@ public class MainActivity extends AppCompatActivity {
 
         // ====Layout Creation====
         setContentView(R.layout.activity_main);
-        stopButton = (Button)findViewById(R.id.stopButton);
+        stopButton = (ImageButton)findViewById(R.id.stopButton);
+
+        //Check boxes
+        noiseCheckBox = (CheckedTextView )findViewById(R.id.noiseCheckBox);
+        peakCheckBox = (CheckedTextView )findViewById(R.id.peakCheckBox);
+        intervalCheckBox = (CheckedTextView )findViewById(R.id.intervalCheckBox);
+
+
         // ====End of Layout Creation====
 
         startupIntent = new Intent(this, StartupActivity.class);
@@ -174,50 +186,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(mainActivity, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }
     }
-
-//    private void sendRecording(){
-//        //Set output file path
-//        final String fileName = getExternalCacheDir().getAbsolutePath()+"n.txt";
-//        Log.i("OUTPUT_FILE", fileName);
-//        //Attempt file creation
-//        final File root = new File(fileName);
-//        if(!root.canWrite()){
-//            Log.i("DEBUG", "Cannot write");
-//        }
-//        //Save data to file
-//        DataOutputStream fos = null;
-//        try {
-//            fos = new DataOutputStream(new FileOutputStream(root));
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-////        int recorded = segmentCount*bufferSize;
-//        for(int d=0; d<recordingList.size(); d++) {
-//            try {
-//                fos.writeShort((int)recordingList.get(d));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        try {
-//            fos.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-////        String filename=root.getName();
-//        Uri path = Uri.fromFile(root);
-//        Intent emailIntent = new Intent(Intent.ACTION_SEND); // set the type to 'email'
-//        emailIntent .setType("vnd.android.cursor.dir/email");
-//        String to[] = {"or.zzamir@gmail.com"};
-//        emailIntent .putExtra(Intent.EXTRA_EMAIL, to);// the attachment
-//        emailIntent .putExtra(Intent.EXTRA_STREAM, Uri.parse(path.toString()));// the mail subject
-//        emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
-//        startActivity(Intent.createChooser(emailIntent , "Send email..."));
-//        //END of File Saving
-//
-//    }
-
-
 
 
     //===================Recorder Task===============================//
@@ -338,6 +306,22 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
                 //TODO: Do something fancy
+            } else {
+                int currentCondition = stopCondition.getCurrentCondition();
+                switch (currentCondition){
+                    case 0:
+                        break;
+                    case 1:
+                        noiseCheckBox.setChecked(true);
+                        break;
+                    case 2:
+                        peakCheckBox.setChecked(true);
+                        break;
+                    case 3:
+                        intervalCheckBox.setChecked(true);
+                        break;
+                }
+
             }
 
         }

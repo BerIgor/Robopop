@@ -15,4 +15,6 @@ public abstract class StopCondition {
     }
 
     public abstract boolean conditionSatisfied();
+
+    public abstract int getCurrentCondition();
 }

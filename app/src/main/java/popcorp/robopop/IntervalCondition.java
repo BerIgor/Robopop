@@ -35,6 +35,7 @@ class IntervalCondition extends StopCondition {
     private int currentIndex = 0;
     private int counter = 0;
     private int currentWindowSize = 0;
+    private boolean conditionSatisfied = false;
 
     //====Methods====//
     IntervalCondition(LinkedList<Integer> popList, int desiredInterval, int powerSetting){
@@ -46,7 +47,7 @@ class IntervalCondition extends StopCondition {
     @Override
     public boolean conditionSatisfied() {
 
-        boolean conditionSatisfied = false;
+//        boolean conditionSatisfied = false;
 
         // Calculate
         currentWindowSize = setCurrentWindowSize(popList, previousPopCount);
@@ -117,4 +118,18 @@ class IntervalCondition extends StopCondition {
         }
         return popList.getLast();
     }
+
+    public int getCurrentCondition(){
+        if(conditionSatisfied){
+            return 3;
+        }
+        if(havePeaked){
+            return 2;
+        }
+        if(currentIndex >= startIndex){
+            return 1;
+        }
+        return 0;
+    }
+
 }

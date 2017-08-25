@@ -22,4 +22,10 @@ public class CountingCondition extends StopCondition {
         }
         return false;
     }
+
+    // TODO: fix dummy stuff
+    @Override
+    public int getCurrentCondition(){
+        return 0;
+    }
 }
