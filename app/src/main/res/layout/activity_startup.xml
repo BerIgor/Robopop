@@ -4,7 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="popcorp.robopop.StartupActivity">
+    tools:context="popcorp.robopop.StartupActivity"
+    android:background="@drawable/stripe_pattern">
+
+    <LinearLayout
+        android:id="@+id/MainLayout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:background="@drawable/stripe_pattern">
+
+    </LinearLayout>
+
+
+
 
     <Spinner
         android:id="@+id/PowerSpinner"
@@ -21,6 +35,22 @@
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="@+id/imageView" />
 
+
+    <ImageView
+        android:id="@+id/spinningLight"
+        android:layout_width="219dp"
+        android:layout_height="202dp"
+        app:srcCompat="@drawable/sunrays"
+        app:layout_constraintTop_toTopOf="@+id/StartButton"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/StartButton"
+        app:layout_constraintBottom_toBottomOf="@+id/StartButton"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/StartButton" />
+
+
     <ImageButton
         android:id="@+id/StartButton"
         android:layout_width="129dp"
@@ -35,7 +65,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.718"
+        app:layout_constraintVertical_bias="0.781"
         app:srcCompat="@drawable/popped_kernel" />
 
     <TextView
@@ -56,6 +86,7 @@
         app:layout_constraintVertical_bias="0.513"
         android:textColor="@color/colorRed"/>
 
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="273dp"
@@ -68,6 +99,8 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintHorizontal_bias="0.505" />
+
+
 
 
 </android.support.constraint.ConstraintLayout>
