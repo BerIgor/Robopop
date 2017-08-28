@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,11 +19,16 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import static android.R.attr.id;
+import static android.R.attr.layout;
 import static android.R.attr.rotation;
 
 
@@ -98,7 +104,6 @@ public class StartupActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(StartupActivity.this, R.style.MyDialogTheme);
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
@@ -109,7 +114,7 @@ public class StartupActivity extends AppCompatActivity {
             case R.id.IOT:
                 break;
             case R.id.Sound:
-                dialogSoundConstructor();
+                dialogSoundConstructor(alertDialog);
                 break;
             case R.id.About:
                 alertDialog.setContentView(R.layout.info_dialog_layout);
@@ -120,33 +125,55 @@ public class StartupActivity extends AppCompatActivity {
     }
 
 
-    public void dialogSoundConstructor(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(StartupActivity.this);
-        String alertTitle = "Sound";
-        alertDialogBuilder.setTitle(alertTitle).setItems(R.array.soundArray, new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int which){
-                selectedSound = which;
-                switch (which){ //TODO: find sounds
+    public void dialogSoundConstructor(final AlertDialog alertDialog) {
+        alertDialog.show();
+        alertDialog.setContentView(R.layout.sound_dialog_layout);
+        String[] testArray = getResources().getStringArray(R.array.soundArray);
+
+        final RadioGroup rg = (RadioGroup) alertDialog.findViewById(R.id.soundRadioGroup);
+
+        // Setting OK Button
+        Button soundOkButton = (Button) alertDialog.findViewById(R.id.OKbutton);
+
+        soundOkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int sel = rg.getCheckedRadioButtonId();
+                switch(sel) {
                     case 0:
                         selectedSound = R.raw.sound0;
+                        Log.i("IGOR", "STARTUP - Sound selected == " + (new Integer(selectedSound)).toString());
                         break;
+
                     case 1:
                         selectedSound = R.raw.sound1;
+                        Log.i("IGOR", "STARTUP - Sound selected == " + (new Integer(selectedSound)).toString());
                         break;
+
                     case 2:
-
                         break;
+
                     case 3:
-
                         break;
+
                     case 4:
                         break;
+
+                    default:
+                        selectedSound = R.raw.sound0;
+                        Log.i("IGOR", "STARTUP - Default selected == " + (new Integer(selectedSound)).toString());
                 }
-                Log.i("IGOR", "STARTUP - Sound selected == " + (new Integer(which)).toString());
+                rg.clearCheck();
+                alertDialog.cancel();
             }
         });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
 
+        // Setting the Radio Buttens
+        for(int i=0;i<5;i++){
+            RadioButton rb=new RadioButton(StartupActivity.this); // dynamically creating RadioButton and adding to RadioGroup.
+            rb.setText(testArray[i]);
+            rb.setId(i);
+            rg.addView(rb);
+        }
+    }
 }
