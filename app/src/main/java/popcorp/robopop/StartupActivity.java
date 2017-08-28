@@ -70,9 +70,9 @@ public class StartupActivity extends AppCompatActivity {
                 AlertDialog.Builder powerAlertDialogBuilder = new AlertDialog.Builder(StartupActivity.this, R.style.MyDialogTheme);
                 String alertTitle = "Choose Microwave Power";
                 powerAlertDialogBuilder.setTitle(alertTitle).setItems(R.array.powerArray, new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int which){
-                        selectedPower = which;
-                        Log.i("IGOR", "STARTUP - Power selected == " + (new Integer(which)).toString());
+                    public void onClick(DialogInterface dialog, int selectedOption){
+                        selectedPower = selectedOption;
+                        Log.i("IGOR", "STARTUP - Power selected == " + (new Integer(selectedOption)).toString());
                     }
                 });
                 AlertDialog alertDialog = powerAlertDialogBuilder.create();
@@ -85,6 +85,8 @@ public class StartupActivity extends AppCompatActivity {
         rotation.setFillAfter(true);
         ImageView spinningLight = (ImageView) findViewById(R.id.spinningLight);
         spinningLight.startAnimation(rotation);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
 

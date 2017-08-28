@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     static final int windowSize = 4;
     static final int sampleRate = 44100;
     static final int factor = 25;
-    static final double sPopWidth = 0.03; // pop width in seconds
 
     //====== Variables ======//
     // Recorder and Processor Tasks
@@ -55,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private Intent startupIntent = null;
 
     private MediaPlayer mediaPlayer = null;
+
+    private double sPopWidth; // pop width in seconds
 
     // Layout Items
     ImageView noiseStep = null;
@@ -81,14 +82,6 @@ public class MainActivity extends AppCompatActivity {
         bufferSize = windowSize * sampleRate;
         audioRecorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, CHANNEL_IN_MONO, ENCODING_PCM_16BIT, 2*bufferSize);
 
-        // Calculate pop width (to define window in which we ignore extra pops) in samples
-        int popWidth = (int)(sPopWidth*sampleRate);
-
-        Log.i("IGOR", "MAIN - pop width " + (new Integer(popWidth)).toString());
-
-        // Processor Setup
-//        peakFinder = new MovingAverage(factor, popWidth);
-        peakFinder = new ZamirBerendorf(factor, popWidth);
 
         // Task Creation
         recorderTask = new RecorderTask();
@@ -111,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
         noiseText.setTypeface(typeface);
         peakText.setTypeface(typeface);
         intervalText.setTypeface(typeface);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         // ====End of Layout Creation====
 
@@ -142,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
         int power = getIntent().getIntExtra("Power", 0);
         stopCondition = new IntervalCondition(popIndexList, sampleRate * desiredIntervalSeconds, power);
 //        stopCondition = new CountingCondition(desiredPopCount);
+
+        peakFinder = PeakFinderFactory.getPeakFinder(sampleRate, power);
 
         // Start the Recorder Thread
         recorderTask.execute();
