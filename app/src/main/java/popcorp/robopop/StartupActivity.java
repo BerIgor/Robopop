@@ -1,9 +1,13 @@
 package popcorp.robopop;
 
+import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
+
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -50,6 +54,11 @@ public class StartupActivity extends AppCompatActivity {
             }
         });
 
+        // Action Bar background
+        android.support.v7.app.ActionBar bar = getSupportActionBar();
+        Drawable d = getResources().getDrawable(R.drawable.popcorn_top, this.getTheme());
+        bar.setBackgroundDrawable(d);
+
 
 
         // Power Button
@@ -76,9 +85,9 @@ public class StartupActivity extends AppCompatActivity {
         rotation.setFillAfter(true);
         ImageView spinningLight = (ImageView) findViewById(R.id.spinningLight);
         spinningLight.startAnimation(rotation);
-
-
     }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu configMenu){
         getMenuInflater().inflate(R.menu.config_menu, configMenu);
