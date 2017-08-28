@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <ImageView
+        android:id="@+id/aboutFrameImage"
+        android:layout_width="362dp"
+        android:layout_height="280dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/progress_bar_frame_streched"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintVertical_bias="0.398"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteY="78dp" />
+
+    <TextView
+        android:id="@+id/aboutText"
+        android:layout_width="287dp"
+        android:layout_height="112dp"
+        android:layout_marginBottom="65dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:fontFamily="casual"
+        android:text="@string/aboutTextString"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="@+id/aboutFrameImage"
+        app:layout_constraintLeft_toLeftOf="@+id/aboutFrameImage"
+        app:layout_constraintRight_toRightOf="@+id/aboutFrameImage"
+        app:layout_constraintHorizontal_bias="0.508" />
+
+    <TextView
+        android:id="@+id/aboutTitleText"
+        android:layout_width="170dp"
+        android:layout_height="37dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:text="About..."
+        app:layout_constraintTop_toTopOf="@+id/aboutFrameImage"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/aboutText"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/aboutFrameImage"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/aboutFrameImage"
+        app:layout_constraintVertical_bias="1.0" />
+
+
+</android.support.constraint.ConstraintLayout>

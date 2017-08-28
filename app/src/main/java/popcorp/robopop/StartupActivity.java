@@ -98,10 +98,13 @@ public class StartupActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(StartupActivity.this, R.style.MyDialogTheme);
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
         switch (item.getItemId()) {
             case R.id.Manual:
-                String manualText = new String("You have to do this and this..");
-                dialogConstructor("Manual",manualText);
+                alertDialog.setContentView(R.layout.manual_dialog_layout);
                 break;
             case R.id.IOT:
                 break;
@@ -109,32 +112,13 @@ public class StartupActivity extends AppCompatActivity {
                 dialogSoundConstructor();
                 break;
             case R.id.About:
-                String aboutText = new String("By Or Zamir et al.");
-                dialogConstructor("About",aboutText);
+                alertDialog.setContentView(R.layout.info_dialog_layout);
                 break;
         }
-
-
 
         return true;
     }
 
-    public void dialogConstructor(String title, String message){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(StartupActivity.this, R.style.MyDialogTheme);
-        String alertTitle = title;
-        String alertMessage = message;
-        String alertButtonText = "Okay";
-        alertDialogBuilder.setMessage(alertMessage).setTitle(alertTitle);
-        alertDialogBuilder.setCancelable(false);
-        alertDialogBuilder.setPositiveButton(alertButtonText, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id){
-
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
 
     public void dialogSoundConstructor(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(StartupActivity.this);

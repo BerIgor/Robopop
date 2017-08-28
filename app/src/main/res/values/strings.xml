@@ -14,4 +14,8 @@
         <item>Sound4</item>
     </string-array>
 
+    <string name="aboutTextString">"Robopop V1.0\nBy Or Zamir and Igor Berendorf\nInstructed by Ro'ee Mazor\nFor the public's wealth"</string>
+
+    <string name="manualTextString">"This is how to:\n1) Put your phone near the microwave\n2) Choose Microwave Power\n3) Start Microwave\n4) Click Start Button\n5) Sit back and let it pop!"</string>
+
 </resources>
