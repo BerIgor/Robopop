@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Intent startupIntent = null;
 
+    private boolean alreadySatisfied;
+
     private MediaPlayer mediaPlayer = null;
 
     // Layout Items
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Media Player - for final notification
         mediaPlayer = new MediaPlayer();
-        mediaPlayer = MediaPlayer.create(this, getIntent().getIntExtra("Sound", R.raw.sound0));
+        mediaPlayer = MediaPlayer.create(this, getIntent().getIntExtra("Sound", R.raw.get_to_the_choppa));
 
         Log.i("IGOR", "MAIN - buffer size " + (new Integer(bufferSize)).toString());
 
@@ -125,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("IGOR", "MAIN - on STOP");
-                stopAll(MainActivity.this);
                 startActivity(startupIntent);
             }
         });
@@ -148,12 +149,19 @@ public class MainActivity extends AppCompatActivity {
 
         peakFinder = PeakFinderFactory.getPeakFinder(sampleRate, power);
 
+        // Flag for preventing multiple alerts
+        alreadySatisfied = false;
+
         // Start the Recorder Thread
-//        while(recorderTask.isCancelled()) {
-            recorderTask.execute();
-//        }
+        recorderTask.execute();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopAll(MainActivity.this);
+        startActivity(startupIntent);
+    }
 
     /*
     Method for stopping recording and processing
@@ -163,18 +171,9 @@ public class MainActivity extends AppCompatActivity {
         mainActivity.audioRecorder.stop();
         mainActivity.audioRecorder.release();
         if(!mainActivity.recorderTask.isCancelled()) {
-            Log.i("IGOR", "MAIN - before cancel");
             mainActivity.recorderTask.cancel(true);
-//          Log.i("IGOR", "MAIN - after cancel");
         }
 //        sendMail(mainActivity); //TODO: Remove when done developing
-    }
-
-    @Override
-    public void onBackPressed() {
-        Log.i("IGOR", "MAIN - on STOP back button");
-        stopAll(MainActivity.this);
-        startActivity(startupIntent);
     }
 
     /*
@@ -314,9 +313,9 @@ public class MainActivity extends AppCompatActivity {
             //DEBUG
 
             //stopCondition.conditionSatisfied()
-            if (true) {
+            if (true && !alreadySatisfied) {
+                alreadySatisfied = true;
                 Log.i("IGOR", "PROCESSOR - I AM SATISFIED");
-                stopAll(MainActivity.this);
                 mediaPlayer.start(); // no need to call prepare(); create() does that for you
                 // Alert Dialog
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.MyDialogTheme);

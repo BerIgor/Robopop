@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +29,7 @@ This activity will be the first one opened when the app is launched.
 public class StartupActivity extends AppCompatActivity {
 
     private int selectedPower = 0;
-    private int selectedSound = R.raw.sound0;
+    private int selectedSound = R.raw.get_to_the_choppa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +118,38 @@ public class StartupActivity extends AppCompatActivity {
         String[] soundArray = getResources().getStringArray(R.array.soundArray);
 
         final RadioGroup rg = (RadioGroup) alertDialog.findViewById(R.id.soundRadioGroup);
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                switch(rg.getCheckedRadioButtonId()) {
+                    case 0:
+                        selectedSound = R.raw.hallelujah;
+                        Log.i("IGOR", "STARTUP - Sound selected == " + (new Integer(selectedSound)).toString());
+                        break;
+                    case 1:
+                        selectedSound = R.raw.ding;
+                        Log.i("IGOR", "STARTUP - Sound selected == " + (new Integer(selectedSound)).toString());
+                        break;
+                    //TODO: Or, add more sounds
+                    case 2:
+                        selectedSound = R.raw.super_mario;
+                        break;
+                    case 3:
+                        selectedSound = R.raw.you_win;
+                        break;
+                    case 4:
+                        selectedSound = R.raw.get_to_the_choppa;
+                        mediaPlayer.setVolume(1, 1);
+                        break;
+                    default:
+                        selectedSound = R.raw.get_to_the_choppa;
+                        Log.i("IGOR", "STARTUP - Default selected == " + (new Integer(selectedSound)).toString());
+                }
+                mediaPlayer = MediaPlayer.create(getApplicationContext(), selectedSound);
+                mediaPlayer.start();
+            }
+        });
 
         // Setting OK Button
         Button soundOkButton = (Button) alertDialog.findViewById(R.id.OKbutton);
@@ -123,28 +157,7 @@ public class StartupActivity extends AppCompatActivity {
         soundOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int sel = rg.getCheckedRadioButtonId();
-                switch(sel) {
-                    case 0:
-                        selectedSound = R.raw.sound0;
-                        Log.i("IGOR", "STARTUP - Sound selected == " + (new Integer(selectedSound)).toString());
-                        break;
-                    case 1:
-                        selectedSound = R.raw.sound1;
-                        Log.i("IGOR", "STARTUP - Sound selected == " + (new Integer(selectedSound)).toString());
-                        break;
-                    //TODO: Or, add more sounds
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                    default:
-                        selectedSound = R.raw.sound0;
-                        Log.i("IGOR", "STARTUP - Default selected == " + (new Integer(selectedSound)).toString());
-                }
-                rg.clearCheck();
+//                rg.clearCheck();
                 alertDialog.cancel();
             }
         });

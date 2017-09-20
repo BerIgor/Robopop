@@ -8,11 +8,11 @@
     <integer name="powerCount">3</integer>
 
     <string-array name="soundArray">
-        <item>Halleluya</item>
-        <item>Sound1</item>
-        <item>Sound2</item>
-        <item>Sound3</item>
-        <item>Sound4</item>
+        <item>Hallelujah</item>
+        <item>Ding</item>
+        <item>Super Mario</item>
+        <item>You Win</item>
+        <item>Get to the Choppa!</item>
     </string-array>
     <integer name="soundCount">5</integer>
 
