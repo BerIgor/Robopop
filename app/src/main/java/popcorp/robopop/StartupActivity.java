@@ -1,35 +1,24 @@
 package popcorp.robopop;
 
-import android.app.ActionBar;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
-
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.TextView;
-
-import static android.R.attr.id;
-import static android.R.attr.layout;
-import static android.R.attr.rotation;
 
 
 /*
@@ -74,15 +63,9 @@ public class StartupActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Create dialogue for power selection
                 AlertDialog.Builder powerAlertDialogBuilder = new AlertDialog.Builder(StartupActivity.this, R.style.MyDialogTheme);
-                String alertTitle = "Choose Microwave Power";
-                powerAlertDialogBuilder.setTitle(alertTitle).setItems(R.array.powerArray, new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int selectedOption){
-                        selectedPower = selectedOption;
-                        Log.i("IGOR", "STARTUP - Power selected == " + (new Integer(selectedOption)).toString());
-                    }
-                });
                 AlertDialog alertDialog = powerAlertDialogBuilder.create();
                 alertDialog.show();
+                dialogPowerConstructor(alertDialog);
             }
         });
 
@@ -111,8 +94,6 @@ public class StartupActivity extends AppCompatActivity {
             case R.id.Manual:
                 alertDialog.setContentView(R.layout.manual_dialog_layout);
                 break;
-            case R.id.IOT:
-                break;
             case R.id.Sound:
                 dialogSoundConstructor(alertDialog);
                 break;
@@ -124,11 +105,15 @@ public class StartupActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 
     public void dialogSoundConstructor(final AlertDialog alertDialog) {
         alertDialog.show();
         alertDialog.setContentView(R.layout.sound_dialog_layout);
-        String[] testArray = getResources().getStringArray(R.array.soundArray);
+        String[] soundArray = getResources().getStringArray(R.array.soundArray);
 
         final RadioGroup rg = (RadioGroup) alertDialog.findViewById(R.id.soundRadioGroup);
 
@@ -144,21 +129,17 @@ public class StartupActivity extends AppCompatActivity {
                         selectedSound = R.raw.sound0;
                         Log.i("IGOR", "STARTUP - Sound selected == " + (new Integer(selectedSound)).toString());
                         break;
-
                     case 1:
                         selectedSound = R.raw.sound1;
                         Log.i("IGOR", "STARTUP - Sound selected == " + (new Integer(selectedSound)).toString());
                         break;
-
+                    //TODO: Or, add more sounds
                     case 2:
                         break;
-
                     case 3:
                         break;
-
                     case 4:
                         break;
-
                     default:
                         selectedSound = R.raw.sound0;
                         Log.i("IGOR", "STARTUP - Default selected == " + (new Integer(selectedSound)).toString());
@@ -168,19 +149,25 @@ public class StartupActivity extends AppCompatActivity {
             }
         });
 
-        // Setting the Radio Buttens
+        // Setting the Radio Buttons
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Market_Deco.ttf");
+        Context context = getApplicationContext();
+        int textColor = R.color.colorAccent;
         for(int i=0;i<5;i++){
             RadioButton rb=new RadioButton(StartupActivity.this); // dynamically creating RadioButton and adding to RadioGroup.
-            rb.setText(testArray[i]);
+            rb.setText(soundArray[i]);
+            rb.setTypeface(font);
+            rb.setTextColor(ContextCompat.getColor(context, textColor));
+            rb.setTextSize(20);
             rb.setId(i);
             rg.addView(rb);
         }
     }
-
+//TODO: Maybe combine both dialogue constructors into one method
     public void dialogPowerConstructor(final AlertDialog alertDialog) {
         alertDialog.show();
         alertDialog.setContentView(R.layout.power_dialog_layout);
-        String[] testArray = getResources().getStringArray(R.array.powerArray);
+        String[] powerArray = getResources().getStringArray(R.array.powerArray);
 
         final RadioGroup rg = (RadioGroup) alertDialog.findViewById(R.id.powerRadioGroup);
 
@@ -190,42 +177,29 @@ public class StartupActivity extends AppCompatActivity {
         powerOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int sel = rg.getCheckedRadioButtonId();
-                switch(sel) {
-                    case 0:
-                        selectedPower = R.raw.sound0;
-                        Log.i("IGOR", "STARTUP - Power selected == " + (new Integer(selectedPower)).toString());
-                        break;
-
-                    case 1:
-                        selectedPower = R.raw.sound1;
-                        Log.i("IGOR", "STARTUP - Power selected == " + (new Integer(selectedPower)).toString());
-                        break;
-
-                    case 2:
-                        break;
-
-                    case 3:
-                        break;
-
-                    case 4:
-                        break;
-
-                    default:
-                        selectedSound = R.raw.sound0;
-                        Log.i("IGOR", "STARTUP - Default selected == " + (new Integer(selectedPower)).toString());
+                selectedPower = rg.getCheckedRadioButtonId();
+                if (selectedPower == -1){
+                    selectedPower = 0;
                 }
+                Log.i("IGOR", "STARTUP - Power selected == " + (new Integer(selectedPower)).toString());
                 rg.clearCheck();
                 alertDialog.cancel();
             }
         });
 
         // Setting the Radio Buttons
-        for(int i=0;i<5;i++){
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Market_Deco.ttf");
+        Context context = getApplicationContext();
+        int textColor = R.color.colorAccent;
+        for(int i=0;i<3;i++){
             RadioButton rb=new RadioButton(StartupActivity.this); // dynamically creating RadioButton and adding to RadioGroup.
-            rb.setText(testArray[i]);
+            rb.setText(powerArray[i]);
+            rb.setTypeface(font);
+            rb.setTextColor(ContextCompat.getColor(context, textColor));
+            rb.setTextSize(20);
             rb.setId(i);
             rg.addView(rb);
         }
     }
+
 }

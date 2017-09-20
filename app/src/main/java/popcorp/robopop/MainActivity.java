@@ -3,6 +3,7 @@ package popcorp.robopop;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -10,8 +11,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     static final int sampleRate = 44100;
     static final int factor = 25;
 
+
     //====== Variables ======//
     // Recorder and Processor Tasks
     private RecorderTask recorderTask = null;
@@ -55,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer = null;
 
-    private double sPopWidth; // pop width in seconds
-
     // Layout Items
     ImageView noiseStep = null;
     ImageView peakStep = null;
@@ -68,6 +70,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("IGOR", "MAIN - onCreate");
         super.onCreate(savedInstanceState);
+
+        // Action Bar background
+        android.support.v7.app.ActionBar bar = getSupportActionBar();
+        Drawable d = getResources().getDrawable(R.drawable.popcorn_top, this.getTheme());
+        bar.setBackgroundDrawable(d);
 
 
         // Recorder Setup
@@ -96,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         peakStep = (ImageView)findViewById(R.id.peakStep);
         intervalStep = (ImageView)findViewById(R.id.intervalStep);
         // Text Steps - setting font
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/myfont.ttf");
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Market_Deco.ttf");
         TextView noiseText = (TextView)findViewById(R.id.noiseStepText);
         TextView peakText = (TextView)findViewById(R.id.peakStepText);
         TextView intervalText = (TextView)findViewById(R.id.intervalStepText);
@@ -119,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i("IGOR", "MAIN - on STOP");
                 stopAll(MainActivity.this);
-                //TODO: return this when you remove the mail thing
                 startActivity(startupIntent);
             }
         });
@@ -128,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
+
+
         Log.i("IGOR", "MAIN - onStart");
 
         popIndexList = new LinkedList<>(); // Data structure for peak indices
@@ -142,7 +150,39 @@ public class MainActivity extends AppCompatActivity {
         peakFinder = PeakFinderFactory.getPeakFinder(sampleRate, power);
 
         // Start the Recorder Thread
-        recorderTask.execute();
+//        while(recorderTask.isCancelled()) {
+            recorderTask.execute();
+//        }
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        Log.i("IGOR", "MAIN - onRestart");
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        Log.i("IGOR", "MAIN - onPause");
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        Log.i("IGOR", "MAIN - onStop");
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        Log.i("IGOR", "MAIN - onStop");
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Log.i("IGOR", "MAIN - onResume");
     }
 
     /*
@@ -150,10 +190,21 @@ public class MainActivity extends AppCompatActivity {
      */
     private static void stopAll(MainActivity mainActivity) {
         mainActivity.peakFinder.reset();
-        mainActivity.audioRecorder.stop();
-        mainActivity.audioRecorder.release();
-        mainActivity.recorderTask.cancel(true);
+//        mainActivity.audioRecorder.stop();
+//        mainActivity.audioRecorder.release();ssssss
+//      if(!mainActivity.recorderTask.isCancelled()) {
+            Log.i("IGOR", "MAIN - before cancel");
+            mainActivity.recorderTask.cancel(true);
+//          Log.i("IGOR", "MAIN - after cancel");
+//        }
 //        sendMail(mainActivity); //TODO: Remove when done developing
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.i("IGOR", "MAIN - on STOP back button");
+        stopAll(MainActivity.this);
+        startActivity(startupIntent);
     }
 
     /*
@@ -261,7 +312,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //===================Processor Task===============================//
-
     private class ProcessorTask extends AsyncTask<Object, Object, Object> {
 
         private int arrayIndex = 0;
@@ -293,28 +343,33 @@ public class MainActivity extends AppCompatActivity {
             Log.i("IGOR", popIndexList.toString());
             //DEBUG
 
-
-            if (stopCondition.conditionSatisfied()) {
+            //stopCondition.conditionSatisfied()
+            if (true) {
                 Log.i("IGOR", "PROCESSOR - I AM SATISFIED");
                 stopAll(MainActivity.this);
                 mediaPlayer.start(); // no need to call prepare(); create() does that for you
                 // Alert Dialog
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                String alertTitle = "Quick,";
-                String alertMessage = "your popcorn is ready";
-                String alertButtonText = "Okay";
-                alertDialogBuilder.setMessage(alertMessage).setTitle(alertTitle);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.MyDialogTheme);
                 alertDialogBuilder.setCancelable(false);
-                alertDialogBuilder.setPositiveButton(alertButtonText, new DialogInterface.OnClickListener() {
 
+                final AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+                alertDialog.setContentView(R.layout.done_dialog_layout);
+                Button doneOkButton = (Button) alertDialog.findViewById(R.id.OKbutton);
+
+                doneOkButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int id){
+                    public void onClick(View view) {
+                        alertDialog.cancel();
                         startActivity(startupIntent);
                     }
-
                 });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+
+                Typeface quickFont = Typeface.createFromAsset(getAssets(),"fonts/Mikodacs.otf");
+                TextView doneTitleText = (TextView) alertDialog.findViewById(R.id.doneTitleText);
+                doneTitleText.setTypeface(quickFont);
+
                 //TODO: Do something fancy
             } else {
                 int currentCondition = stopCondition.getCurrentCondition();

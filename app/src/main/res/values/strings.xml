@@ -5,6 +5,7 @@
         <item>Medium</item>
         <item>High</item>
     </string-array>
+    <integer name="powerCount">3</integer>
 
     <string-array name="soundArray">
         <item>Halleluya</item>
@@ -13,6 +14,7 @@
         <item>Sound3</item>
         <item>Sound4</item>
     </string-array>
+    <integer name="soundCount">5</integer>
 
     <string name="aboutTextString">"Robopop V1.0\nBy Or Zamir and Igor Berendorf\nInstructed by Ro'ee Mazor\nFor the public's wealth"</string>
 

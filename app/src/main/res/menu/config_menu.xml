@@ -2,8 +2,6 @@
 
     <item android:id="@+id/Manual"
         android:title="Manual"/>
-    <item android:id="@+id/IOT"
-        android:title="IOT"/>
     <item android:id="@+id/Sound"
         android:title="Sound"/>
     <item android:id="@+id/About"

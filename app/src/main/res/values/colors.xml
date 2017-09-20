@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="doneTitleColor">#FF0055</color>
     <color name="colorYellow0">#D8C6A2</color>
     <color name="colorYellow1">#ECDAB0</color>
     <color name="colorYellow2">#FFFFD6</color>
