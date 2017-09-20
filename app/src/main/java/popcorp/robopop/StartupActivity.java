@@ -2,9 +2,11 @@ package popcorp.robopop;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
@@ -119,9 +121,14 @@ public class StartupActivity extends AppCompatActivity {
 
         final RadioGroup rg = (RadioGroup) alertDialog.findViewById(R.id.soundRadioGroup);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            MediaPlayer mediaPlayer = new MediaPlayer();
+
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-                MediaPlayer mediaPlayer = new MediaPlayer();
+                if(mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
                 switch(rg.getCheckedRadioButtonId()) {
                     case 0:
                         selectedSound = R.raw.hallelujah;
