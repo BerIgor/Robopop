@@ -129,12 +129,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(startupIntent);
             }
         });
-    }
+    } //end of onCreate
 
     @Override
     protected void onStart(){
         super.onStart();
-
 
         Log.i("IGOR", "MAIN - onStart");
 
@@ -155,48 +154,19 @@ public class MainActivity extends AppCompatActivity {
 //        }
     }
 
-    @Override
-    protected void onRestart(){
-        super.onRestart();
-        Log.i("IGOR", "MAIN - onRestart");
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-        Log.i("IGOR", "MAIN - onPause");
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-        Log.i("IGOR", "MAIN - onStop");
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        Log.i("IGOR", "MAIN - onStop");
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        Log.i("IGOR", "MAIN - onResume");
-    }
 
     /*
     Method for stopping recording and processing
      */
     private static void stopAll(MainActivity mainActivity) {
         mainActivity.peakFinder.reset();
-//        mainActivity.audioRecorder.stop();
-//        mainActivity.audioRecorder.release();ssssss
-//      if(!mainActivity.recorderTask.isCancelled()) {
+        mainActivity.audioRecorder.stop();
+        mainActivity.audioRecorder.release();
+        if(!mainActivity.recorderTask.isCancelled()) {
             Log.i("IGOR", "MAIN - before cancel");
             mainActivity.recorderTask.cancel(true);
 //          Log.i("IGOR", "MAIN - after cancel");
-//        }
+        }
 //        sendMail(mainActivity); //TODO: Remove when done developing
     }
 
