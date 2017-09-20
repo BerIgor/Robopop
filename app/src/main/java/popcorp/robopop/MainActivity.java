@@ -312,8 +312,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i("IGOR", popIndexList.toString());
             //DEBUG
 
-            //stopCondition.conditionSatisfied()
-            if (true && !alreadySatisfied) {
+            if (stopCondition.conditionSatisfied() && !alreadySatisfied) {
                 alreadySatisfied = true;
                 Log.i("IGOR", "PROCESSOR - I AM SATISFIED");
                 mediaPlayer.start(); // no need to call prepare(); create() does that for you
