@@ -176,4 +176,56 @@ public class StartupActivity extends AppCompatActivity {
             rg.addView(rb);
         }
     }
+
+    public void dialogPowerConstructor(final AlertDialog alertDialog) {
+        alertDialog.show();
+        alertDialog.setContentView(R.layout.power_dialog_layout);
+        String[] testArray = getResources().getStringArray(R.array.powerArray);
+
+        final RadioGroup rg = (RadioGroup) alertDialog.findViewById(R.id.powerRadioGroup);
+
+        // Setting OK Button
+        Button powerOkButton = (Button) alertDialog.findViewById(R.id.OKbutton);
+
+        powerOkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int sel = rg.getCheckedRadioButtonId();
+                switch(sel) {
+                    case 0:
+                        selectedPower = R.raw.sound0;
+                        Log.i("IGOR", "STARTUP - Power selected == " + (new Integer(selectedPower)).toString());
+                        break;
+
+                    case 1:
+                        selectedPower = R.raw.sound1;
+                        Log.i("IGOR", "STARTUP - Power selected == " + (new Integer(selectedPower)).toString());
+                        break;
+
+                    case 2:
+                        break;
+
+                    case 3:
+                        break;
+
+                    case 4:
+                        break;
+
+                    default:
+                        selectedSound = R.raw.sound0;
+                        Log.i("IGOR", "STARTUP - Default selected == " + (new Integer(selectedPower)).toString());
+                }
+                rg.clearCheck();
+                alertDialog.cancel();
+            }
+        });
+
+        // Setting the Radio Buttons
+        for(int i=0;i<5;i++){
+            RadioButton rb=new RadioButton(StartupActivity.this); // dynamically creating RadioButton and adding to RadioGroup.
+            rb.setText(testArray[i]);
+            rb.setId(i);
+            rg.addView(rb);
+        }
+    }
 }
