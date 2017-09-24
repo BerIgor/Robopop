@@ -1,0 +1,63 @@
+@startuml
+
+actor User
+User -> StartupActivity: <<open app>>
+activate StartupActivity
+StartupActivity -> MainActivity: onStart()
+activate MainActivity
+activate StopCondition
+activate PeakFinder
+deactivate StartupActivity
+
+MainActivity -> RecorderTask: <<create>>
+activate RecorderTask
+MainActivity -> RecorderTask: doInBackground()
+RecorderTask -> RecorderTask: onMarkerReached()
+activate RecorderTask
+
+RecorderTask -> ProcessorTask: <<create>>
+activate ProcessorTask
+RecorderTask -> ProcessorTask: execute()
+ProcessorTask -> ProcessorTask: doInBackground()
+ProcessorTask -> PeakFinder: getPops()
+PeakFinder --> ProcessorTask: New Pops
+activate StopCondition
+ProcessorTask -> StopCondition: conditionSatisfied()
+StopCondition --> ProcessorTask: <font color=red><b>Not satisfied
+deactivate StopCondition
+
+ProcessorTask -> RecorderTask: onProgressUpdate()
+destroy ProcessorTask
+deactivate RecorderTask
+...
+== Repetition ==
+...
+RecorderTask -> RecorderTask: onMarkerReached()
+activate RecorderTask
+
+RecorderTask -> ProcessorTask: <<create>>
+activate ProcessorTask
+RecorderTask -> ProcessorTask: execute()
+ProcessorTask -> ProcessorTask: doInBackground()
+ProcessorTask -> PeakFinder: getPops()
+PeakFinder --> ProcessorTask: New Pops
+activate StopCondition
+ProcessorTask -> StopCondition: conditionSatisfied()
+StopCondition --> ProcessorTask: <font color=blue><b>Satisfied
+deactivate StopCondition
+
+ProcessorTask -> RecorderTask: onProgressUpdate()
+destroy ProcessorTask
+deactivate RecorderTask
+
+RecorderTask -> MainActivity: onProgressUpdate()
+
+MainActivity -> MainActivity: stopAll()
+
+destroy StopCondition
+destroy PeakFinder
+destroy MainActivity
+
+activate StartupActivity
+MainActivity -> StartupActivity
+@enduml

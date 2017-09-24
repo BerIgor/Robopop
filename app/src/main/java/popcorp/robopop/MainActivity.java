@@ -55,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
     private AudioRecord audioRecorder = null;
 
-    private Intent startupIntent = null;
-
     private boolean alreadySatisfied;
 
     private MediaPlayer mediaPlayer = null;
@@ -115,11 +113,8 @@ public class MainActivity extends AppCompatActivity {
         intervalText.setTypeface(typeface);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-
         // ====End of Layout Creation====
 
-        startupIntent = new Intent(this, StartupActivity.class);
 
         // ====Stop Button====
         // Stop all tasks and return to the Startup Activity
@@ -127,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("IGOR", "MAIN - on STOP");
-                startActivity(startupIntent);
+                finish();
             }
         });
     } //end of onCreate
@@ -160,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         stopAll(MainActivity.this);
-        startActivity(startupIntent);
+        finish();
     }
 
     /*
@@ -330,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         alertDialog.cancel();
-                        startActivity(startupIntent);
+                        finish();
                     }
                 });
 

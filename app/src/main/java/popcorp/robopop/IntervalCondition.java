@@ -65,7 +65,6 @@ class IntervalCondition extends StopCondition {
         return conditionSatisfied;
     }
 
-
     private static boolean satisfiedInterval(LinkedList<Integer> popList, int previousPopCount, int currentWindowSize, int desiredInterval){
         Log.i("IGOR", "INTERVAL - CHECKING");
         Iterator<Integer> iterator = popList.listIterator(max(previousPopCount - 1, 0));
@@ -87,7 +86,6 @@ class IntervalCondition extends StopCondition {
         }
         return false;
     }
-
 
     private void setPeaked(){
         Log.i("IGOR", "CURRENT WINDOW PEAK COUNT == " + currentWindowSize);

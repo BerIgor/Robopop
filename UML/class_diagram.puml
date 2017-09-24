@@ -1,0 +1,43 @@
+@startuml
+
+class AppCompatActivity
+AppCompatActivity <|-- StartupActivity
+AppCompatActivity <|-- MainActivity
+
+class StartupActivity {
+    selectedPower: int
+    selectedSound: int
+    dialogSoundConstructor()
+    dialogPowerConstructor()
+}
+StartupActivity .. MainActivity
+class MainActivity
+MainActivity *-- StopCondition
+MainActivity *-- PeakFinder
+MainActivity *-- PeakFinderFactory
+
+interface StopCondition {
+    conditionSatisfied()
+}
+class CountingCondition
+class IntervalCondition
+StopCondition <|-- CountingCondition
+StopCondition <|-- IntervalCondition
+
+interface PeakFinder {
+    getPops()
+    reset()
+    factor
+    popWidth
+}
+class PeakFinderFactory {
+    getPeakFinder()
+}
+class ZamirBerendorf
+class MovingAverage
+(PeakFinder, MainActivity) .. PeakFinderFactory
+PeakFinder <|-- ZamirBerendorf
+PeakFinder <|-- MovingAverage
+
+
+@enduml

@@ -8,6 +8,10 @@ in the popList is greater or equal to the desired index count
  */
 public class CountingCondition extends StopCondition {
 
+    /*
+    desiredIndexCount is an integer value representing the number of desired pops, at which the
+    popcorn is ready.
+     */
     private int desiredIndexCount = -1;
 
     CountingCondition(LinkedList<Integer> popList, int desiredIndexCount){
