@@ -113,7 +113,7 @@ public class StartupActivity extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
-
+//TODO: Maybe the following two methods should be private?
     public void dialogSoundConstructor(final AlertDialog alertDialog) {
         alertDialog.show();
         alertDialog.setContentView(R.layout.sound_dialog_layout);

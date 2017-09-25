@@ -11,20 +11,19 @@ deactivate StartupActivity
 
 MainActivity -> RecorderTask: <<create>>
 activate RecorderTask
-MainActivity -> RecorderTask: doInBackground()
-RecorderTask -> RecorderTask: onMarkerReached()
+MainActivity -> RecorderTask: execute()
+RecorderTask -> RecorderTask: onPeriodicNotification()
 activate RecorderTask
 
 RecorderTask -> ProcessorTask: <<create>>
 activate ProcessorTask
 RecorderTask -> ProcessorTask: execute()
-ProcessorTask -> ProcessorTask: doInBackground()
 ProcessorTask -> PeakFinder: getPops()
-PeakFinder --> ProcessorTask: New Pops
-activate StopCondition
+PeakFinder --> ProcessorTask: Updated Pops
+
 ProcessorTask -> StopCondition: conditionSatisfied()
 StopCondition --> ProcessorTask: <font color=red><b>Not satisfied
-deactivate StopCondition
+
 
 ProcessorTask -> RecorderTask: onProgressUpdate()
 destroy ProcessorTask
@@ -32,25 +31,26 @@ deactivate RecorderTask
 ...
 == Repetition ==
 ...
-RecorderTask -> RecorderTask: onMarkerReached()
+RecorderTask -> RecorderTask: onPeriodicNotification()
 activate RecorderTask
 
 RecorderTask -> ProcessorTask: <<create>>
 activate ProcessorTask
 RecorderTask -> ProcessorTask: execute()
-ProcessorTask -> ProcessorTask: doInBackground()
 ProcessorTask -> PeakFinder: getPops()
-PeakFinder --> ProcessorTask: New Pops
-activate StopCondition
+PeakFinder --> ProcessorTask: Updated Pops
+
 ProcessorTask -> StopCondition: conditionSatisfied()
 StopCondition --> ProcessorTask: <font color=blue><b>Satisfied
-deactivate StopCondition
+
 
 ProcessorTask -> RecorderTask: onProgressUpdate()
 destroy ProcessorTask
 deactivate RecorderTask
 
 RecorderTask -> MainActivity: onProgressUpdate()
+
+== User Confirmation ==
 
 MainActivity -> MainActivity: stopAll()
 

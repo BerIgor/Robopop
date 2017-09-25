@@ -5,19 +5,33 @@ AppCompatActivity <|-- StartupActivity
 AppCompatActivity <|-- MainActivity
 
 class StartupActivity {
-    selectedPower: int
-    selectedSound: int
-    dialogSoundConstructor()
-    dialogPowerConstructor()
+    -selectedPower: int
+    -selectedSound: int
+    +dialogSoundConstructor()
+    +dialogPowerConstructor()
 }
 StartupActivity .. MainActivity
-class MainActivity
-MainActivity *-- StopCondition
-MainActivity *-- PeakFinder
-MainActivity *-- PeakFinderFactory
+
+class MainActivity {
+    +popIndexList: LinkedList<Integer>
+    +bufferSize: int
+    +recording: short[][]
+    -audioRecorder: AudioRecord
+    -mediaPlayer: MediaPlayer
+    +stopAll()
+}
+class RecorderTask
+class ProcessorTask
+MainActivity "1  " +-- RecorderTask
+MainActivity "1    " +-- ProcessorTask
+MainActivity "1" *-- StopCondition
+MainActivity "1" *-- PeakFinder
+MainActivity "1" *-- PeakFinderFactory
 
 interface StopCondition {
-    conditionSatisfied()
+    #popList: LinkedList<Integer>
+    +conditionSatisfied()
+    +getCurrentCondition()
 }
 class CountingCondition
 class IntervalCondition
@@ -35,9 +49,15 @@ class PeakFinderFactory {
 }
 class ZamirBerendorf
 class MovingAverage
-(PeakFinder, MainActivity) .. PeakFinderFactory
+PeakFinder <-- PeakFinderFactory: creates
 PeakFinder <|-- ZamirBerendorf
 PeakFinder <|-- MovingAverage
+
+class AsyncTask
+
+AsyncTask <|-- RecorderTask
+AsyncTask <|-- ProcessorTask
+
 
 
 @enduml
