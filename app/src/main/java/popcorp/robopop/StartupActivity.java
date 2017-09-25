@@ -2,11 +2,9 @@ package popcorp.robopop;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
@@ -30,6 +28,11 @@ This activity will be the first one opened when the app is launched.
  */
 public class StartupActivity extends AppCompatActivity {
 
+    /**
+     * This class represents the Activity that appears on screen when the app is launched.
+     * It handles the setting of alert sound (when popcorn is ready), the power setting of the
+     * microwave, as well as a short manual and "about" dialogs.
+     */
     private int selectedPower = 0;
     private int selectedSound = R.raw.get_to_the_choppa;
 
@@ -82,7 +85,6 @@ public class StartupActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu configMenu){
         getMenuInflater().inflate(R.menu.config_menu, configMenu);
@@ -113,8 +115,12 @@ public class StartupActivity extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
-//TODO: Maybe the following two methods should be private?
-    public void dialogSoundConstructor(final AlertDialog alertDialog) {
+
+    /**
+     * Handles the sound selection dialog. Updates the selected sound.
+     * @param alertDialog is the dialog in which this is created
+     */
+    private void dialogSoundConstructor(final AlertDialog alertDialog) {
         alertDialog.show();
         alertDialog.setContentView(R.layout.sound_dialog_layout);
         String[] soundArray = getResources().getStringArray(R.array.soundArray);
@@ -164,7 +170,6 @@ public class StartupActivity extends AppCompatActivity {
         soundOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                rg.clearCheck();
                 alertDialog.cancel();
             }
         });
@@ -183,8 +188,12 @@ public class StartupActivity extends AppCompatActivity {
             rg.addView(rb);
         }
     }
-//TODO: Maybe combine both dialogue constructors into one method
-    public void dialogPowerConstructor(final AlertDialog alertDialog) {
+
+    /**
+     * Handles the power selection dialog. Updates the selectedPower variable.
+     * @param alertDialog is the dialog in which this is created
+     */
+    private void dialogPowerConstructor(final AlertDialog alertDialog) {
         alertDialog.show();
         alertDialog.setContentView(R.layout.power_dialog_layout);
         String[] powerArray = getResources().getStringArray(R.array.powerArray);

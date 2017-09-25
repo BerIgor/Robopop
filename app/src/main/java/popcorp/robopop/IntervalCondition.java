@@ -27,9 +27,7 @@ class IntervalCondition extends StopCondition {
     private int previousPopCount = 0;
     private int desiredInterval = -1; //Desired interval in indices
 
-//    private int previousWindowSize = 0;
     private int maxWindowSize = 0;
-//    private int startIndex = 150*sampleRate;  // The number represents the seconds from recording start
     private boolean havePeaked = false;
     private int startIndex;
     private int currentIndex = 0;
@@ -65,6 +63,10 @@ class IntervalCondition extends StopCondition {
         return conditionSatisfied;
     }
 
+    /*
+    The following method will return true if there is an interval larger than desiredInterval
+    between two elements in the popList
+     */
     private static boolean satisfiedInterval(LinkedList<Integer> popList, int previousPopCount, int currentWindowSize, int desiredInterval){
         Log.i("IGOR", "INTERVAL - CHECKING");
         Iterator<Integer> iterator = popList.listIterator(max(previousPopCount - 1, 0));
@@ -87,6 +89,13 @@ class IntervalCondition extends StopCondition {
         return false;
     }
 
+    /*
+    The following method changes the value of the private variable havePeaked if we have reached
+    the peak in pops/interval.
+
+    Implementation-detail: if the number of pops in the current sample window increases for 5
+    consecutive windows, we know it's a peak, otherwise restart the count.
+     */
     private void setPeaked(){
         Log.i("IGOR", "CURRENT WINDOW PEAK COUNT == " + currentWindowSize);
         if(havePeaked || currentIndex < startIndex){
@@ -106,10 +115,16 @@ class IntervalCondition extends StopCondition {
         }
     }
 
+    /*
+    This method returns the number of new pops in the popList
+     */
     private static int setCurrentWindowSize(LinkedList<Integer> popList, int previousPopCount){
         return (popList.size() - previousPopCount);
     }
 
+    /*
+    Returns the index of the last element in popList
+     */
     private static int setCurrentIndex(LinkedList<Integer> popList){
         if(popList.size() <= 0) {
             return 0;
@@ -117,6 +132,9 @@ class IntervalCondition extends StopCondition {
         return popList.getLast();
     }
 
+    /*
+    Returns an integer value representing the current status
+     */
     public int getCurrentCondition(){
         if(conditionSatisfied){
             return 3;

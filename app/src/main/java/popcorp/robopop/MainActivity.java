@@ -1,6 +1,5 @@
 package popcorp.robopop;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -11,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,8 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -30,33 +26,29 @@ import static android.media.AudioFormat.ENCODING_PCM_16BIT;
 
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * This class is the Activity that is present on the screen during popcorn preparation.
+     * It contains the AsyncTasks that handle recording and processing, as well as managing the
+     * recording task.
+     */
 
     //===== Constants =====//
     static final int desiredIntervalSeconds = 2;
     static final int windowSize = 4;
     static final int sampleRate = 44100;
-    static final int factor = 25;
-
 
     //====== Variables ======//
     // Recorder and Processor Tasks
     private RecorderTask recorderTask = null;
     private ProcessorTask processorTask = null;
-
     public LinkedList<Integer> popIndexList = new LinkedList<>(); // Data structure for peak indices
     private StopCondition stopCondition = null;
     private PeakFinder peakFinder = null;
-
     private ImageButton stopButton = null;
-
-    public int bufferSize = -1; //TODO: Check premissions
-
+    public int bufferSize = -1;
     public static short recording[][] = null;
-
     private AudioRecord audioRecorder = null;
-
     private boolean alreadySatisfied;
-
     private MediaPlayer mediaPlayer = null;
 
     // Layout Items
@@ -76,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         Drawable d = getResources().getDrawable(R.drawable.popcorn_top, this.getTheme());
         bar.setBackgroundDrawable(d);
 
-
         // Recorder Setup
         bufferSize = AudioRecord.getMinBufferSize(sampleRate, CHANNEL_IN_MONO, ENCODING_PCM_16BIT);
 
@@ -89,10 +80,8 @@ public class MainActivity extends AppCompatActivity {
         bufferSize = windowSize * sampleRate;
         audioRecorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, CHANNEL_IN_MONO, ENCODING_PCM_16BIT, 2*bufferSize);
 
-
         // Task Creation
         recorderTask = new RecorderTask();
-
 
         // ====Layout Creation====
         setContentView(R.layout.activity_main);
@@ -115,8 +104,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         // ====End of Layout Creation====
 
-
-        // ====Stop Button====
+        // Stop Button
         // Stop all tasks and return to the Startup Activity
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,18 +204,30 @@ public class MainActivity extends AppCompatActivity {
     //===================Recorder Task===============================//
     private class RecorderTask extends AsyncTask <Object, Object, Object> implements AudioRecord.OnRecordPositionUpdateListener{
 
+        /**
+         * This private class handles the recording of audio data
+         */
+
+
         //====== Variables ======//
         private int arrayIndex = 0;
 
-
+        /**
+         * Constructor
+         */
         public RecorderTask() {
             Log.i("IGOR", "RECORDER - CTOR");
-
             // Configure Audio Recorder
             audioRecorder.setRecordPositionUpdateListener(this);
             audioRecorder.setPositionNotificationPeriod(bufferSize);
         }
 
+        /**
+         *Begins the recording process
+         *
+         * @param params - are insignificant and not used
+         * @return null, always
+         */
         @Override
         protected Object doInBackground(Object... params) {
             Log.i("IGOR", "RECORDER - doInBackground");
@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
+        //TODO: Is this method needed?
         @Override
         protected void onProgressUpdate(Object... values) {
             super.onProgressUpdate(values);
@@ -248,7 +249,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Invoked when recording head reaches some periodic marker
+        /**
+         * Invoked when recording head reaches some periodic marker
+         *
+         * Reads the new audio data, then creates and executes a processor task to handle the data
+         */
         @Override
         public void onPeriodicNotification(AudioRecord recorder) {
             Log.i("IGOR", "RECORDER - onPeriodicNotification: SAVING TO " + (new Integer(arrayIndex)).toString());
@@ -261,11 +266,12 @@ public class MainActivity extends AppCompatActivity {
             Log.i("IGOR", "RECORDER - recorded " + (new Integer(read)).toString());
             arrayIndex = 1 - arrayIndex;
             processorTask.execute();
-//            publishProgress();
+            //publishProgress();
         }
 
-        // Irrelevant because activated only after runInBackground returns, which happens way
-        // before we invoke cancel
+        /**
+         * Properly stops the audio recorder
+         */
         @Override
         protected void onCancelled(Object o) {
             super.onCancelled();
@@ -278,12 +284,27 @@ public class MainActivity extends AppCompatActivity {
     //===================Processor Task===============================//
     private class ProcessorTask extends AsyncTask<Object, Object, Object> {
 
-        private int arrayIndex = 0;
+        /**
+         * This class handles audio data retrieved from the audio recorder
+         */
 
+        private int arrayIndex = 0; //Represents the index at which to start processing of data
+
+        /**
+         * Constructor
+         * @param arrayIndexToProcess is the index of the array from which to start the processing
+         *                            of data
+         */
         ProcessorTask(int arrayIndexToProcess){
             arrayIndex = arrayIndexToProcess;
         }
 
+        /**
+         * Invokes the peak finder to update the popList
+         *
+         * @param params - are insignificant
+         * @return always null
+         */
         @Override
         protected Object doInBackground(Object... params) {
             if (isCancelled()) {
@@ -297,20 +318,28 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
+        /**
+         * Checks if the stopCondition is satisfied
+         * If yes- creates an alert dialog and plays a sound
+         *
+         * @param values - are insignificant
+         */
         @Override
         protected void onProgressUpdate(Object... values) {
             super.onProgressUpdate(values);
             Log.i("IGOR", "PROCESSOR - ON PROGRESS UPDATE");
 
+            //TODO: Remove
             // DEBUG
             // Print the list
             Log.i("IGOR", popIndexList.toString());
             //DEBUG
 
             if (stopCondition.conditionSatisfied() && !alreadySatisfied) {
+                //We're done
                 alreadySatisfied = true;
                 Log.i("IGOR", "PROCESSOR - I AM SATISFIED");
-                mediaPlayer.start(); // no need to call prepare(); create() does that for you
+                mediaPlayer.start(); // no need to call prepare(), create() does that for you
                 // Alert Dialog
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.MyDialogTheme);
                 alertDialogBuilder.setCancelable(false);
@@ -333,8 +362,8 @@ public class MainActivity extends AppCompatActivity {
                 TextView doneTitleText = (TextView) alertDialog.findViewById(R.id.doneTitleText);
                 doneTitleText.setTypeface(quickFont);
 
-                //TODO: Do something fancy
             } else {
+                //We're not done yet
                 int currentCondition = stopCondition.getCurrentCondition();
                 switch (currentCondition){
                     case 0:
