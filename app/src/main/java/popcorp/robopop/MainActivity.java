@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     public LinkedList<Integer> popIndexList = new LinkedList<>(); // Data structure for peak indices
     private StopCondition stopCondition = null;
     private PeakFinder peakFinder = null;
-    private ImageButton stopButton = null;
     public int bufferSize = -1;
     public static short recording[][] = null;
     private AudioRecord audioRecorder = null;
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         // ====Layout Creation====
         setContentView(R.layout.activity_main);
-        stopButton = (ImageButton)findViewById(R.id.stopButton);
+        ImageButton stopButton = (ImageButton)findViewById(R.id.stopButton);
 
         // Kernel Steps
         noiseStep = (ImageView) findViewById(R.id.noiseStep);
@@ -139,6 +138,10 @@ public class MainActivity extends AppCompatActivity {
         recorderTask.execute();
     }
 
+    /**
+     * This method will be invoked whenever the app is sent to the background, and reset the app.
+     * In such a case (until further knowledge is gained), the entire app should be restarted.
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -146,8 +149,10 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    /*
-    Method for stopping recording and processing
+    /**
+     * Prepares everything for a second run of the app
+     *
+     * @param mainActivity is the main activity in which all should be stopped :)
      */
     private static void stopAll(MainActivity mainActivity) {
         mainActivity.peakFinder.reset();
@@ -236,18 +241,6 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
-        //TODO: Is this method needed?
-        @Override
-        protected void onProgressUpdate(Object... values) {
-            super.onProgressUpdate(values);
-            processorTask.execute();
-            return;
-        }
-
-        @Override
-        public void onMarkerReached(AudioRecord recorder) {
-            return;
-        }
 
         /**
          * Invoked when recording head reaches some periodic marker
@@ -278,6 +271,11 @@ public class MainActivity extends AppCompatActivity {
             Log.i("IGOR", "RECORDER - Stopped ");
             audioRecorder.stop();
             audioRecorder.release();
+        }
+
+        @Override
+        public void onMarkerReached(AudioRecord audioRecord){
+            return;
         }
     }
 

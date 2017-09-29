@@ -36,16 +36,33 @@ class IntervalCondition extends StopCondition {
     private boolean conditionSatisfied = false;
 
     //====Methods====//
+
+    /**
+     * Constructor
+     *
+     * @param popList is a list containing the pop indices
+     * @param desiredInterval is the desired interval in indices
+     * @param powerSetting is the power setting: 0 - low, 1 - medium, 2 - high
+     */
     IntervalCondition(LinkedList<Integer> popList, int desiredInterval, int powerSetting){
         super(popList);
         this.desiredInterval=desiredInterval;
         startIndex = (150 - (30*powerSetting)) * sampleRate;
     }
 
+    /**
+     * This method checks all the sub-conditions have been satisfied to ratify declaring the interval
+     * condition satisfied.
+     *
+     * The sub-conditions are:
+     * 1) The current index is past the starting index
+     * 2) The pops-per-window gaussian has had its peak
+     * 3) There were non pops within the specified interval
+     *
+     * @return true if the interval condition has been satisfied
+     */
     @Override
     public boolean conditionSatisfied() {
-
-//        boolean conditionSatisfied = false;
 
         // Calculate
         currentWindowSize = setCurrentWindowSize(popList, previousPopCount);
@@ -57,15 +74,14 @@ class IntervalCondition extends StopCondition {
             conditionSatisfied = true;
         }
         // Calculate for next iteration
-//        previousWindowSize = currentWindowSize;
         previousPopCount = popList.size();
 
         return conditionSatisfied;
     }
 
-    /*
-    The following method will return true if there is an interval larger than desiredInterval
-    between two elements in the popList
+    /**
+     * The following method will return true if there is an interval larger than desiredInterval
+     * between two elements in the popList
      */
     private static boolean satisfiedInterval(LinkedList<Integer> popList, int previousPopCount, int currentWindowSize, int desiredInterval){
         Log.i("IGOR", "INTERVAL - CHECKING");
@@ -89,12 +105,12 @@ class IntervalCondition extends StopCondition {
         return false;
     }
 
-    /*
-    The following method changes the value of the private variable havePeaked if we have reached
-    the peak in pops/interval.
-
-    Implementation-detail: if the number of pops in the current sample window increases for 5
-    consecutive windows, we know it's a peak, otherwise restart the count.
+    /**
+     * The following method changes the value of the private variable havePeaked if we have reached
+     * the peak in pops/interval.
+     *
+     * Implementation-detail: if the number of pops in the current sample window increases for 5
+     * consecutive windows, we know it's a peak, otherwise restart the count.
      */
     private void setPeaked(){
         Log.i("IGOR", "CURRENT WINDOW PEAK COUNT == " + currentWindowSize);
@@ -115,15 +131,24 @@ class IntervalCondition extends StopCondition {
         }
     }
 
-    /*
-    This method returns the number of new pops in the popList
+
+    /**
+     * This method is used to calculate the number of pops in the current window (new pops)
+     *
+     * @param popList is a list containing the pop indices
+     * @param previousPopCount is the number of pops before the new window was recorded
+     * @return returns the number of pops in the current window
      */
     private static int setCurrentWindowSize(LinkedList<Integer> popList, int previousPopCount){
         return (popList.size() - previousPopCount);
     }
 
-    /*
-    Returns the index of the last element in popList
+
+    /**
+     * This method is used to get the index of the last pop so far
+     *
+     * @param popList is a list containing the pop indices
+     * @return the index of the last pop recorded so far
      */
     private static int setCurrentIndex(LinkedList<Integer> popList){
         if(popList.size() <= 0) {
@@ -132,8 +157,15 @@ class IntervalCondition extends StopCondition {
         return popList.getLast();
     }
 
-    /*
-    Returns an integer value representing the current status
+    /**
+     * This method can be used to receive information regarding the status pf popcorn preperation
+     * as perceived by the app
+     *
+     * @return A numerical report on the current condition of the popcorn as observed by the app
+     * 3 if the condition is satisfied
+     * 2 if the pop-per-window gaussian has reached its peak
+     * 1 if we passed the startIndex
+     * 0 otherwise
      */
     public int getCurrentCondition(){
         if(conditionSatisfied){
