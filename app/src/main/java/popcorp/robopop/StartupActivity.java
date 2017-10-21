@@ -209,6 +209,9 @@ public class StartupActivity extends AppCompatActivity {
                 selectedPower = rg.getCheckedRadioButtonId();
                 if (selectedPower == -1){
                     selectedPower = 0;
+                } else if (selectedPower == 1){
+                    // It's cool, don't worry about it
+                    selectedPower = 2;
                 }
                 Log.i("IGOR", "STARTUP - Power selected == " + (new Integer(selectedPower)).toString());
                 rg.clearCheck();
