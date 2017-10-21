@@ -223,7 +223,7 @@ public class StartupActivity extends AppCompatActivity {
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Market_Deco.ttf");
         Context context = getApplicationContext();
         int textColor = R.color.colorAccent;
-        for(int i=0;i<3;i++){
+        for(int i=0;i<2;i++){
             RadioButton rb=new RadioButton(StartupActivity.this); // dynamically creating RadioButton and adding to RadioGroup.
             rb.setText(powerArray[i]);
             rb.setTypeface(font);
