@@ -15,8 +15,10 @@
     </string-array>
     <integer name="soundCount">5</integer>
 
-    <string name="aboutTextString">"Robopop V1.0\nBy Or Zamir and Igor Berendorf\nInstructed by Ro'ee Mazor\nFor the public's wealth"</string>
+    <string name="aboutTextString">"Robopop V1.0\n\nBy Or Zamir and Igor Berendorf\nInstructed by Ro'ee Mazor\n\nFor the greater food"</string>
 
     <string name="manualTextString">"This is how to:\n1) Select Microwave Power\n2) Place the phone by the microwave\n3) Start Microwave\n4) Click Start Button\n5) Sit back and let it pop!"</string>
+
+    <string name="powerManualTextString">"Select High if bag is\nnormally ready in under 3 minutes, otherwise select Low."</string>
 
 </resources>

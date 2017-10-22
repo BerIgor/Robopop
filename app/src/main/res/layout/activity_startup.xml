@@ -74,5 +74,23 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
 
+    <ImageButton
+        android:id="@+id/powerManualButton"
+        android:background="@null"
+        android:layout_width="55dp"
+        android:layout_height="31dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/question_mark_edited"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/powerButton"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/powerButton"
+        app:layout_constraintTop_toTopOf="@+id/powerButton"
+        android:layout_marginTop="0dp"
+        app:layout_constraintHorizontal_bias="0.029"
+        app:layout_constraintBottom_toBottomOf="@+id/powerButton"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintVertical_bias="0.0" />
+
 
 </android.support.constraint.ConstraintLayout>

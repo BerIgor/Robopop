@@ -56,6 +56,18 @@ public class StartupActivity extends AppCompatActivity {
             }
         });
 
+        // Power Manual Button
+        ImageButton powerManualButton = (ImageButton) findViewById(R.id.powerManualButton);
+        powerManualButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder powerAlertDialogBuilder = new AlertDialog.Builder(StartupActivity.this, R.style.MyDialogTheme);
+                AlertDialog alertDialog = powerAlertDialogBuilder.create();
+                alertDialog.show();
+                alertDialog.setContentView(R.layout.power_manual_dialog_layout);
+            }
+        });
+
         // Action Bar background
         android.support.v7.app.ActionBar bar = getSupportActionBar();
         Drawable d = getResources().getDrawable(R.drawable.popcorn_top, this.getTheme());

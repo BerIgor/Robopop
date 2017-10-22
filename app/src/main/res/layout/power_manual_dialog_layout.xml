@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="popcorp.robopop.StartupActivity"
+    android:background="@android:color/transparent">
+
+    <ImageView
+        android:id="@+id/manualFrameImage"
+        android:layout_width="354dp"
+        android:layout_height="262dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="false"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.381"
+        app:srcCompat="@drawable/progress_bar_frame_streched" />
+
+    <TextView
+        android:id="@+id/manualText"
+        android:layout_width="268dp"
+        android:layout_height="113dp"
+        android:fontFamily="casual"
+        android:text="@string/powerManualTextString"
+        android:textSize="18sp"
+        android:textAlignment="textStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="@color/colorAccent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/manualFrameImage"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/manualFrameImage"
+        app:layout_constraintBottom_toBottomOf="@+id/manualFrameImage"
+        android:layout_marginBottom="49dp"
+        app:layout_constraintHorizontal_bias="0.542" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="89dp"
+        android:layout_height="51dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/question_mark_edited"
+        app:layout_constraintTop_toTopOf="@+id/manualFrameImage"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/manualText"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/manualFrameImage"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/manualFrameImage"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteY="138dp" />
+
+
+</android.support.constraint.ConstraintLayout>
