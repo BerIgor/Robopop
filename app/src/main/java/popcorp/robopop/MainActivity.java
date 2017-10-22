@@ -1,6 +1,5 @@
 package popcorp.robopop;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.AudioRecord;
@@ -16,9 +15,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import static android.media.AudioFormat.CHANNEL_IN_MONO;
@@ -161,50 +158,7 @@ public class MainActivity extends AppCompatActivity {
         if(!mainActivity.recorderTask.isCancelled()) {
             mainActivity.recorderTask.cancel(true);
         }
-//        sendMail(mainActivity); //TODO: Remove when done developing
     }
-
-    /*
-    Method for debugging purposes- will print a list of times
-     */
-    private void printTimes(){
-        LinkedList<Integer> popTimes = new LinkedList<>();
-        Iterator<Integer> it = popIndexList.iterator();
-        while(it.hasNext()){
-            popTimes.addLast(new Integer((int)(1000*((double)it.next()/sampleRate))));
-        }
-        Log.i("IGOR", popTimes.toString());
-
-
-        LinkedList<Integer> intervalList = new LinkedList<>();
-        Integer current;
-        Integer previous = new Integer(0);
-        for(int i=0; i<popTimes.size(); i++){
-            current = popTimes.get(i);
-            Integer diff = new Integer(current - previous);
-            previous = current;
-            intervalList.add(diff);
-        }
-
-        Log.i("IGOR", intervalList.toString());
-        popTimes.clear();
-        intervalList.clear();
-    }
-
-
-    private static void sendMail(MainActivity mainActivity){
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"or.zzamir@gmail.com"});
-        i.putExtra(Intent.EXTRA_SUBJECT, "suck dick or");
-        i.putExtra(Intent.EXTRA_TEXT   , mainActivity.popIndexList.toString());
-        try {
-            mainActivity.startActivity(Intent.createChooser(i, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(mainActivity, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 
     //===================Recorder Task===============================//
     private class RecorderTask extends AsyncTask <Object, Object, Object> implements AudioRecord.OnRecordPositionUpdateListener{
