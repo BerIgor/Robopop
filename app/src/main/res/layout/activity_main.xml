@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="popcorp.robopop.MainActivity"
-    android:background="@drawable/stripe_pattern">
+    android:background="@drawable/stripe_pattern"
+    android:keepScreenOn="true">
 
     <LinearLayout
         android:id="@+id/MainLayout"
